@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="VNDC">
+  <rect width="512" height="512" rx="96" fill="#111118"/>
+  <path d="M96 144h78l82 184 82-184h78L292 384h-72L96 144Z" fill="#ffffff"/>
+  <path d="M326 144h90v240h-90l-70-120 70-120Z" fill="#7d27c4"/>
+  <path d="M416 144v240h-58V144h58Z" fill="#3d34fd"/>
+</svg>

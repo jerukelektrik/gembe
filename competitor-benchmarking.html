@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEO Competitor Benchmarking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Automotive Competitive Intelligence">
+      <span class="brand-mark">AI</span>
+      <span>Automotive Intelligence</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a class="" href="/">Overview</a>
+      <a class="" href="/business-product-analysis.html">Business Analysis</a>
+      <a class="active" href="/competitor-benchmarking.html">Benchmarking</a>
+    </nav>
+  </header>
+  <main class="page-shell">
+    <section class="page-title">
+      <p>Competitor Analysis untuk Automotive Service Indonesia</p>
+      <h1>SEO Competitor Benchmarking</h1>
+      <span>Benchmark Ahrefs per Mei 2025 untuk traffic, keywords, Domain Rating, backlink, dan peluang SEO.</span>
+    </section>
+    <section class="analysis-surface">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .section-label { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .brand-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tab-btn { padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
+  .tab-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
+  .tab-btn:hover:not(.active) { background: var(--color-background-secondary); }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  .metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; }
+  .metric-label { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 4px; }
+  .metric-value { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .swot-cell { border-radius: var(--border-radius-md); padding: 12px 14px; }
+  .swot-cell.s { background: #EAF3DE; }
+  .swot-cell.w { background: #FCEBEB; }
+  .swot-cell.o { background: #E6F1FB; }
+  .swot-cell.t { background: #FAEEDA; }
+  .swot-title { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
+  .swot-cell.s .swot-title { color: #3B6D11; }
+  .swot-cell.w .swot-title { color: #A32D2D; }
+  .swot-cell.o .swot-title { color: #185FA5; }
+  .swot-cell.t .swot-title { color: #854F0B; }
+  .swot-item { font-size: 12px; margin-bottom: 3px; display: flex; gap: 6px; }
+  .swot-cell.s .swot-item { color: #27500A; }
+  .swot-cell.w .swot-item { color: #791F1F; }
+  .swot-cell.o .swot-item { color: #0C447C; }
+  .swot-cell.t .swot-item { color: #633806; }
+  .dot { font-size: 10px; margin-top: 2px; flex-shrink: 0; }
+  .brand-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .brand-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; flex-shrink: 0; }
+  .brand-name { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+  .brand-tagline { font-size: 12px; color: var(--color-text-secondary); }
+  .dr-bar-wrap { margin-bottom: 16px; }
+  .dr-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .dr-label { font-size: 12px; color: var(--color-text-secondary); width: 90px; flex-shrink: 0; }
+  .dr-bar-bg { flex: 1; background: var(--color-background-secondary); border-radius: 4px; height: 8px; overflow: hidden; }
+  .dr-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .dr-val { font-size: 12px; font-weight: 500; color: var(--color-text-primary); width: 36px; text-align: right; }
+  .insight-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; border-left: 2px solid var(--color-border-secondary); }
+  .compare-section { margin-bottom: 16px; }
+  .hidden { display: none; }
+</style>
+
+<div style="padding: 1rem 0;">
+
+<div class="section-label">Competitive Intelligence — Automotive Service Indonesia</div>
+<p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px; line-height: 1.6;">Data Ahrefs per Mei 2025. Pilih brand untuk melihat analisis SWOT & highlight SEO.</p>
+
+<div class="brand-tabs">
+  <button class="tab-btn active" onclick="showBrand(0)">B-Quik</button>
+  <button class="tab-btn" onclick="showBrand(1)">Jantra Kaki Kaki</button>
+  <button class="tab-btn" onclick="showBrand(2)">Nawilis</button>
+  <button class="tab-btn" onclick="showBrand(3)">Mariban</button>
+  <button class="tab-btn" onclick="showBrand(4)">Carfix</button>
+  <button class="tab-btn" onclick="showBrand(5)">Perbandingan</button>
+</div>
+
+<!-- B-QUIK -->
+<div id="brand-0" class="card">
+  <div class="brand-header">
+    <div class="brand-avatar" style="background:#E6F1FB; color:#185FA5;">BQ</div>
+    <div>
+      <div class="brand-name">B-Quik Indonesia</div>
+      <div class="brand-tagline">b-quik.id — Bengkel modern multi-layanan</div>
+    </div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">Domain Rating</div>
+      <div class="metric-value" style="color:#185FA5;">10</div>
+      <div class="metric-sub">Ahrefs DR Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Organic Traffic/bln</div>
+      <div class="metric-value">24.1K</div>
+      <div class="metric-sub">Tertinggi di cluster</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Org. Keywords</div>
+      <div class="metric-value">5,018</div>
+      <div class="metric-sub">Pos. 1–3: 172 kw</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Live Backlinks</div>
+      <div class="metric-value">1,053</div>
+      <div class="metric-sub">250 ref. domain</div>
+    </div>
+  </div>
+  <div class="swot-grid">
+    <div class="swot-cell s">
+      <div class="swot-title">Strengths</div>
+      <div class="swot-item"><span class="dot">▸</span>Traffic organik tertinggi (24K/bln) — dominasi absolut di cluster</div>
+      <div class="swot-item"><span class="dot">▸</span>Volume keyword terbesar (5.018 kw) mencerminkan coverage konten luas</div>
+      <div class="swot-item"><span class="dot">▸</span>Aktif di paid search (551 paid traffic + 4 paid kw) — satu-satunya yang beriklan</div>
+      <div class="swot-item"><span class="dot">▸</span>Backlink profile terkuat: 250 referring domain aktif</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-title">Weaknesses</div>
+      <div class="swot-item"><span class="dot">▸</span>DR hanya 10 — sangat rendah untuk brand sebesar ini, menunjukkan link building lemah</div>
+      <div class="swot-item"><span class="dot">▸</span>Hanya 172 keyword di posisi 1–3 (3,4% dari total) — banyak kw yang stuck di halaman 2+</div>
+      <div class="swot-item"><span class="dot">▸</span>Domain .id kurang dikenal vs .com untuk link building internasional</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-title">Opportunities</div>
+      <div class="swot-item"><span class="dot">▸</span>Dengan traffic terbesar, bisa ekspansi ke konten edukasi otomotif untuk narik top-funnel</div>
+      <div class="swot-item"><span class="dot">▸</span>Peluang optimasi on-page untuk mendorong lebih banyak kw ke top 3</div>
+      <div class="swot-item"><span class="dot">▸</span>Link building terstruktur bisa mendongkrak DR dan memperkuat posisi</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-title">Threats</div>
+      <div class="swot-item"><span class="dot">▸</span>Carfix memiliki DR lebih tinggi (29) — bisa mengancam posisi SERP jangka panjang</div>
+      <div class="swot-item"><span class="dot">▸</span>Jantra KK dengan DR 27 & traffic 9.6K tumbuh sebagai challenger serius</div>
+      <div class="swot-item"><span class="dot">▸</span>Biaya paid search terus meningkat tanpa peningkatan DR organik</div>
+    </div>
+  </div>
+  <div class="insight-box">Posisi: Market leader digital di cluster ini. B-Quik memimpin jauh di traffic, namun otoritas domain (DR 10) tidak mencerminkan dominasinya — ini adalah gap strategis yang perlu segera ditutup melalui link building agresif.</div>
+</div>
+
+<!-- JANTRA -->
+<div id="brand-1" class="card hidden">
+  <div class="brand-header">
+    <div class="brand-avatar" style="background:#E1F5EE; color:#0F6E56;">JK</div>
+    <div>
+      <div class="brand-name">Jantra Kaki Kaki</div>
+      <div class="brand-tagline">jantrakakikaki.com — Spesialis kaki-kaki & suspensi</div>
+    </div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">Domain Rating</div>
+      <div class="metric-value" style="color:#0F6E56;">27</div>
+      <div class="metric-sub">Ahrefs DR Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Organic Traffic/bln</div>
+      <div class="metric-value">9,619</div>
+      <div class="metric-sub">Rank #2 di cluster</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Org. Keywords</div>
+      <div class="metric-value">389</div>
+      <div class="metric-sub">Pos. 1–3: 61 kw</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Live Backlinks</div>
+      <div class="metric-value">65</div>
+      <div class="metric-sub">35 ref. domain</div>
+    </div>
+  </div>
+  <div class="swot-grid">
+    <div class="swot-cell s">
+      <div class="swot-title">Strengths</div>
+      <div class="swot-item"><span class="dot">▸</span>DR 27 jauh lebih tinggi dari B-Quik (10) — otoritas domain solid untuk niche-nya</div>
+      <div class="swot-item"><span class="dot">▸</span>Rasio traffic-per-keyword efisien: 9.6K traffic dari hanya 389 keyword</div>
+      <div class="swot-item"><span class="dot">▸</span>61 keyword di posisi 1–3 (15,7%) — win rate SERP tertinggi di cluster</div>
+      <div class="swot-item"><span class="dot">▸</span>Spesialisasi niche (kaki-kaki) memberikan topical authority yang kuat</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-title">Weaknesses</div>
+      <div class="swot-item"><span class="dot">▸</span>Tidak ada paid search — seluruh traffic bergantung organik, rentan algoritma</div>
+      <div class="swot-item"><span class="dot">▸</span>Total keyword sangat sedikit (389) — coverage topik terbatas</div>
+      <div class="swot-item"><span class="dot">▸</span>Hanya 35 referring domain aktif — profil backlink sempit</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-title">Opportunities</div>
+      <div class="swot-item"><span class="dot">▸</span>DR yang kuat bisa dimanfaatkan untuk ekspansi ke topik otomotif yang lebih luas</div>
+      <div class="swot-item"><span class="dot">▸</span>Dengan efisiensi traffic tinggi, penambahan konten bisa mendorong traffic signifikan</div>
+      <div class="swot-item"><span class="dot">▸</span>Peluang membangun ecommerce parts kaki-kaki yang ter-SEO dengan baik</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-title">Threats</div>
+      <div class="swot-item"><span class="dot">▸</span>B-Quik dengan resource lebih besar bisa masuk ke niche kaki-kaki kapan saja</div>
+      <div class="swot-item"><span class="dot">▸</span>Niche yang sempit membatasi total addressable market digital</div>
+      <div class="swot-item"><span class="dot">▸</span>Zero paid strategy = zero visibility di atas fold untuk keyword komersial</div>
+    </div>
+  </div>
+  <div class="insight-box">Posisi: Niche specialist yang highly efficient. Jantra KK adalah contoh best practice SEO berbasis niche — DR tinggi, win rate SERP baik, tapi potensi besar yang belum dimaksimalkan karena keterbatasan volume konten.</div>
+</div>
+
+<!-- NAWILIS -->
+<div id="brand-2" class="card hidden">
+  <div class="brand-header">
+    <div class="brand-avatar" style="background:#FBEAF0; color:#993556;">NW</div>
+    <div>
+      <div class="brand-name">Nawilis</div>
+      <div class="brand-tagline">nawilis.com — Bengkel ban & velg</div>
+    </div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">Domain Rating</div>
+      <div class="metric-value" style="color:#993556;">18</div>
+      <div class="metric-sub">Ahrefs DR Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Organic Traffic/bln</div>
+      <div class="metric-value">481</div>
+      <div class="metric-sub">Terendah kedua</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Org. Keywords</div>
+      <div class="metric-value">57</div>
+      <div class="metric-sub">Pos. 1–3: 16 kw</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Live Backlinks</div>
+      <div class="metric-value">161,497</div>
+      <div class="metric-sub">158 ref. domain</div>
+    </div>
+  </div>
+  <div class="swot-grid">
+    <div class="swot-cell s">
+      <div class="swot-title">Strengths</div>
+      <div class="swot-item"><span class="dot">▸</span>Jumlah raw backlink tertinggi di cluster (161.497 live backlinks) — anomali positif</div>
+      <div class="swot-item"><span class="dot">▸</span>16 dari 57 keyword berada di posisi 1–3 (28%) — win rate SERP tertinggi absolut</div>
+      <div class="swot-item"><span class="dot">▸</span>158 referring domain aktif — lebih banyak dari Jantra & Mariban</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-title">Weaknesses</div>
+      <div class="swot-item"><span class="dot">▸</span>Traffic organik sangat rendah (481/bln) — tidak proporsional dengan jumlah backlink</div>
+      <div class="swot-item"><span class="dot">▸</span>Hanya 57 keyword yang terindeks — masalah serius di content strategy atau crawlability</div>
+      <div class="swot-item"><span class="dot">▸</span>DR 18 tidak mencerminkan volume backlink — kemungkinan banyak backlink berkualitas rendah/spam</div>
+      <div class="swot-item"><span class="dot">▸</span>Zero paid traffic — tidak ada investasi di paid channel</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-title">Opportunities</div>
+      <div class="swot-item"><span class="dot">▸</span>Jika backlink diaudit & diperbaiki, DR bisa melonjak signifikan</div>
+      <div class="swot-item"><span class="dot">▸</span>Ekspansi konten serius (target 500+ keyword) dengan DR existing bisa hasilkan traffic 5-10x</div>
+      <div class="swot-item"><span class="dot">▸</span>Brand ban & velg adalah niche dengan demand tinggi — peluang besar jika dieksekusi</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-title">Threats</div>
+      <div class="swot-item"><span class="dot">▸</span>Backlink spam bisa terkena Google Penalty jika tidak dibersihkan</div>
+      <div class="swot-item"><span class="dot">▸</span>Dengan traffic serendah ini, brand awareness digital sangat terbatas</div>
+      <div class="swot-item"><span class="dot">▸</span>Kompetitor bisa mengambil niche ban & velg sebelum Nawilis sempat berkembang</div>
+    </div>
+  </div>
+  <div class="insight-box">Posisi: Sleeping giant dengan potensi tersembunyi. Nawilis memiliki anomali data menarik — 161K backlinks tapi traffic rendah. Indikasi kuat: backlink profile tidak berkualitas, content strategy kosong, atau masalah teknikal. Perlu audit menyeluruh sebelum bisa berkembang.</div>
+</div>
+
+<!-- MARIBAN -->
+<div id="brand-3" class="card hidden">
+  <div class="brand-header">
+    <div class="brand-avatar" style="background:#FAEEDA; color:#854F0B;">MB</div>
+    <div>
+      <div class="brand-name">Mariban</div>
+      <div class="brand-tagline">mariban.com — Sparepart & aksesoris otomotif</div>
+    </div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">Domain Rating</div>
+      <div class="metric-value" style="color:#854F0B;">0</div>
+      <div class="metric-sub">Belum terbaca Ahrefs</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Organic Traffic/bln</div>
+      <div class="metric-value">2,909</div>
+      <div class="metric-sub">Rank #3 di cluster</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Org. Keywords</div>
+      <div class="metric-value">946</div>
+      <div class="metric-sub">Pos. 1–3: 54 kw</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Live Backlinks</div>
+      <div class="metric-value">59</div>
+      <div class="metric-sub">27 ref. domain</div>
+    </div>
+  </div>
+  <div class="swot-grid">
+    <div class="swot-cell s">
+      <div class="swot-title">Strengths</div>
+      <div class="swot-item"><span class="dot">▸</span>Keyword coverage terbesar kedua (946 kw) — content breadth yang baik untuk niche sparepart</div>
+      <div class="swot-item"><span class="dot">▸</span>54 keyword di posisi 1–3 menunjukkan beberapa aset konten yang kompetitif</div>
+      <div class="swot-item"><span class="dot">▸</span>Traffic 2.9K tanpa paid budget — organik murni yang efisien</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-title">Weaknesses</div>
+      <div class="swot-item"><span class="dot">▸</span>DR 0 — domain rating paling rendah, hampir tidak terbaca otoritasnya oleh Ahrefs</div>
+      <div class="swot-item"><span class="dot">▸</span>Hanya 27 referring domain aktif — fondasi link building sangat rapuh</div>
+      <div class="swot-item"><span class="dot">▸</span>Zero paid search — tidak ada safety net traffic dari paid channel</div>
+      <div class="swot-item"><span class="dot">▸</span>Rasio traffic/keyword rendah: 2.9K dari 946 kw menunjukkan banyak kw dengan volume kecil</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-title">Opportunities</div>
+      <div class="swot-item"><span class="dot">▸</span>Dengan 946 keyword terindeks, investasi link building akan memberikan ROI cepat</div>
+      <div class="swot-item"><span class="dot">▸</span>Sparepart otomotif adalah kategori ecommerce dengan LTV tinggi</div>
+      <div class="swot-item"><span class="dot">▸</span>Potensi cluster content strategy untuk mendominasi kategori produk spesifik</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-title">Threats</div>
+      <div class="swot-item"><span class="dot">▸</span>DR 0 sangat rentan terhadap fluktuasi algoritma Google</div>
+      <div class="swot-item"><span class="dot">▸</span>Marketplace (Tokopedia, Shopee) bisa menyedot traffic keyword sparepart</div>
+      <div class="swot-item"><span class="dot">▸</span>Tanpa brand authority, sulit bersaing di keyword high-intent</div>
+    </div>
+  </div>
+  <div class="insight-box">Posisi: Content creator tanpa fondasi. Mariban memiliki keyword coverage baik tapi otoritas domain nol. Ini adalah situasi "rumah di atas pasir" — konten ada, tapi tanpa link authority, semua posisi rentan hilang.</div>
+</div>
+
+<!-- CARFIX -->
+<div id="brand-4" class="card hidden">
+  <div class="brand-header">
+    <div class="brand-avatar" style="background:#EEEDFE; color:#534AB7;">CF</div>
+    <div>
+      <div class="brand-name">Carfix</div>
+      <div class="brand-tagline">carfix.co.id — Platform booking servis online</div>
+    </div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">Domain Rating</div>
+      <div class="metric-value" style="color:#534AB7;">29</div>
+      <div class="metric-sub">Tertinggi di cluster</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Organic Traffic/bln</div>
+      <div class="metric-value">711</div>
+      <div class="metric-sub">Underperform vs DR</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Org. Keywords</div>
+      <div class="metric-value">47</div>
+      <div class="metric-sub">Pos. 1–3: 23 kw</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Live Backlinks</div>
+      <div class="metric-value">347</div>
+      <div class="metric-sub">83 ref. domain</div>
+    </div>
+  </div>
+  <div class="swot-grid">
+    <div class="swot-cell s">
+      <div class="swot-title">Strengths</div>
+      <div class="swot-item"><span class="dot">▸</span>DR 29 — tertinggi di cluster, fondasi otoritas domain paling kokoh</div>
+      <div class="swot-item"><span class="dot">▸</span>Win rate SERP top 3 terbaik: 23 dari 47 kw (49%) berada di posisi 1–3</div>
+      <div class="swot-item"><span class="dot">▸</span>83 referring domain aktif — profil backlink berkualitas (347 link dari 83 domain)</div>
+      <div class="swot-item"><span class="dot">▸</span>Model bisnis platform/booking yang scalable secara digital</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-title">Weaknesses</div>
+      <div class="swot-item"><span class="dot">▸</span>Traffic organik hanya 711/bln — sangat rendah untuk DR 29, menunjukkan content gap besar</div>
+      <div class="swot-item"><span class="dot">▸</span>Hanya 47 keyword terindeks — coverage konten sangat terbatas dibanding potensi</div>
+      <div class="swot-item"><span class="dot">▸</span>Zero paid traffic — potensi konversi langsung tidak dimanfaatkan</div>
+      <div class="swot-item"><span class="dot">▸</span>Meskipun all_time backlinks 1.4M, live hanya 347 — banyak backlink hilang</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-title">Opportunities</div>
+      <div class="swot-item"><span class="dot">▸</span>Dengan DR 29, setiap konten baru akan jauh lebih mudah ranking dibanding kompetitor</div>
+      <div class="swot-item"><span class="dot">▸</span>Content expansion agresif bisa menghasilkan traffic 10-20x dengan authority yang sudah ada</div>
+      <div class="swot-item"><span class="dot">▸</span>Model booking digital sangat sesuai untuk keyword transaksional bervolume tinggi</div>
+      <div class="swot-item"><span class="dot">▸</span>Potensi memimpin cluster jika investasi content marketing dilakukan serius</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-title">Threats</div>
+      <div class="swot-item"><span class="dot">▸</span>B-Quik yang traffic-nya 34x lebih besar bisa mengancam model booking Carfix</div>
+      <div class="swot-item"><span class="dot">▸</span>Backlink hilang massal (1.4M all-time vs 347 live) bisa jadi sinyal penalti atau link rot</div>
+      <div class="swot-item"><span class="dot">▸</span>Tanpa content strategy, kompetitor bisa menyusul authority lewat konten massal</div>
+    </div>
+  </div>
+  <div class="insight-box">Posisi: Diamond in the rough. Carfix punya fondasi domain terkuat tapi tidak memanfaatkannya. Ibarat punya tanah premium tapi dibiarkan kosong — DR 29 dengan hanya 47 keyword adalah gap strategis terbesar di seluruh cluster ini.</div>
+</div>
+
+<!-- PERBANDINGAN -->
+<div id="brand-5" class="card hidden">
+  <div class="section-label" style="margin-bottom:12px;">Perbandingan metrik utama</div>
+  <div class="dr-bar-wrap">
+    <div class="dr-row">
+      <div class="dr-label">B-Quik</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:34%; background:#378ADD;"></div></div>
+      <div class="dr-val">DR 10</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Jantra KK</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:93%; background:#1D9E75;"></div></div>
+      <div class="dr-val">DR 27</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Nawilis</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:62%; background:#D4537E;"></div></div>
+      <div class="dr-val">DR 18</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Mariban</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:2%; background:#BA7517;"></div></div>
+      <div class="dr-val">DR 0</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Carfix</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:100%; background:#7F77DD;"></div></div>
+      <div class="dr-val">DR 29</div>
+    </div>
+  </div>
+  <div style="margin-bottom: 10px;" class="section-label">Organic Traffic / bulan</div>
+  <div class="dr-bar-wrap">
+    <div class="dr-row">
+      <div class="dr-label">B-Quik</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:100%; background:#378ADD;"></div></div>
+      <div class="dr-val">24.1K</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Jantra KK</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:40%; background:#1D9E75;"></div></div>
+      <div class="dr-val">9.6K</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Nawilis</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:2%; background:#D4537E;"></div></div>
+      <div class="dr-val">481</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Mariban</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:12%; background:#BA7517;"></div></div>
+      <div class="dr-val">2.9K</div>
+    </div>
+    <div class="dr-row">
+      <div class="dr-label">Carfix</div>
+      <div class="dr-bar-bg"><div class="dr-bar" style="width:3%; background:#7F77DD;"></div></div>
+      <div class="dr-val">711</div>
+    </div>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px; margin-top: 8px;">
+    <div class="section-label" style="margin-bottom: 8px;">Key insight: Authority vs Traffic paradox</div>
+    <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">
+      Cluster ini menunjukkan paradoks menarik: <strong style="color: var(--color-text-primary);">Carfix memiliki DR tertinggi (29) tapi traffic terendah kedua (711)</strong>, sementara <strong style="color: var(--color-text-primary);">B-Quik dengan DR terendah (10) memimpin traffic (24K)</strong>. Ini menandakan bahwa di niche otomotif Indonesia, <em>volume dan kualitas konten lebih menentukan traffic jangka pendek</em> dibanding domain authority — namun DR yang kuat akan menjadi keunggulan kompetitif yang decisive di masa depan.
+    </div>
+  </div>
+  <div style="margin-top: 12px;">
+    <button class="tab-btn" style="font-size: 12px;" onclick="sendPrompt('Berikan rekomendasi strategi SEO dan content marketing untuk masing-masing 5 brand berdasarkan data Ahrefs yang sudah dianalisis')">Minta rekomendasi strategi ↗</button>
+    <button class="tab-btn" style="font-size: 12px; margin-left: 6px;" onclick="sendPrompt('Siapa yang paling layak menjadi market leader digital dalam 12 bulan ke depan berdasarkan data ini dan mengapa?')">Siapa calon market leader? ↗</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showBrand(idx) {
+  for (let i = 0; i <= 5; i++) {
+    const el = document.getElementById('brand-' + i);
+    if (el) el.classList.add('hidden');
+  }
+  const target = document.getElementById('brand-' + idx);
+  if (target) target.classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+}
+</script>
+
+    </section>
+  </main>
+  <script>
+    function sendPrompt(text) {
+      if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+      alert('Prompt rekomendasi sudah disiapkan:\n\n' + text);
+    }
+  </script>
+</body>
+</html>

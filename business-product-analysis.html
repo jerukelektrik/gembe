@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Business & Product Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Automotive Competitive Intelligence">
+      <span class="brand-mark">AI</span>
+      <span>Automotive Intelligence</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a class="" href="/">Overview</a>
+      <a class="active" href="/business-product-analysis.html">Business Analysis</a>
+      <a class="" href="/competitor-benchmarking.html">Benchmarking</a>
+    </nav>
+  </header>
+  <main class="page-shell">
+    <section class="page-title">
+      <p>Competitor Analysis untuk Automotive Service Indonesia</p>
+      <h1>Business & Product Analysis</h1>
+      <span>Framework SWOT, Jobs-to-be-Done, positioning map, dan competitor matrix untuk lima brand otomotif.</span>
+    </section>
+    <section class="analysis-surface">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; padding-top: 1rem; }
+.tab { padding: 6px 14px; border-radius: 8px; border: 0.5px solid var(--color-border-secondary); background: transparent; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; }
+.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; border-color: var(--color-border-primary); }
+.tab:hover:not(.active) { background: var(--color-background-secondary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; padding: 1.25rem; margin-bottom: 12px; }
+.brand-hero { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.hero-info h2 { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+.hero-info p { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; line-height: 1.5; }
+.dna-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
+.section-title { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.box { border-radius: 8px; padding: 12px 14px; }
+.box-title { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
+.box-item { font-size: 12px; display: flex; gap: 6px; margin-bottom: 4px; line-height: 1.5; }
+.dot { flex-shrink: 0; margin-top: 2px; font-size: 10px; }
+.s-box { background: #EAF3DE; }
+.s-box .box-title { color: #3B6D11; }
+.s-box .box-item { color: #27500A; }
+.w-box { background: #FCEBEB; }
+.w-box .box-title { color: #A32D2D; }
+.w-box .box-item { color: #791F1F; }
+.o-box { background: #E6F1FB; }
+.o-box .box-title { color: #185FA5; }
+.o-box .box-item { color: #0C447C; }
+.t-box { background: #FAEEDA; }
+.t-box .box-title { color: #854F0B; }
+.t-box .box-item { color: #633806; }
+.i-box { background: var(--color-background-secondary); border-left: 2px solid var(--color-border-secondary); border-radius: 4px; padding: 10px 14px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 12px; }
+.usp-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.usp-pill { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+.score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.score-label { font-size: 12px; color: var(--color-text-secondary); width: 140px; flex-shrink: 0; }
+.score-bar { flex: 1; background: var(--color-background-secondary); border-radius: 4px; height: 7px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 4px; }
+.score-val { font-size: 12px; font-weight: 500; color: var(--color-text-primary); width: 24px; text-align: right; }
+.matrix-wrap { overflow-x: auto; }
+table.matrix { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 580px; }
+table.matrix th { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-secondary); text-align: left; }
+table.matrix td { padding: 9px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: top; color: var(--color-text-secondary); }
+table.matrix td:first-child { font-weight: 500; color: var(--color-text-primary); }
+.chip { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; margin: 1px; }
+.chip-g { background: #EAF3DE; color: #27500A; }
+.chip-r { background: #FCEBEB; color: #791F1F; }
+.chip-y { background: #FAEEDA; color: #633806; }
+.chip-b { background: #E6F1FB; color: #0C447C; }
+.verdict-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+.verdict-card { background: var(--color-background-secondary); border-radius: 8px; padding: 10px; text-align: center; }
+.verdict-name { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.verdict-label { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.verdict-star { font-size: 18px; }
+</style>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('framework')">Framework</button>
+  <button class="tab" onclick="show('bquik')">B-Quik</button>
+  <button class="tab" onclick="show('jantra')">Jantra KK</button>
+  <button class="tab" onclick="show('nawilis')">Nawilis</button>
+  <button class="tab" onclick="show('mariban')">Mariban</button>
+  <button class="tab" onclick="show('carfix')">Carfix</button>
+  <button class="tab" onclick="show('matrix')">Competitor Matrix</button>
+</div>
+
+<!-- FRAMEWORK -->
+<div id="panel-framework" class="panel active">
+  <div class="card">
+    <div class="section-title">Framework yang digunakan</div>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:14px;">Analisis ini menggabungkan <strong style="color:var(--color-text-primary);">3 framework</strong> sekaligus untuk mendapatkan gambaran bisnis yang lebih tajam dari sekadar SWOT.</p>
+    <div class="grid3">
+      <div class="box" style="background:var(--color-background-secondary);">
+        <div class="box-title" style="color:var(--color-text-primary);font-size:13px;">1. SWOT</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;">Strengths, Weaknesses, Opportunities, Threats — untuk snapshot kondisi bisnis saat ini.</div>
+      </div>
+      <div class="box" style="background:var(--color-background-secondary);">
+        <div class="box-title" style="color:var(--color-text-primary);font-size:13px;">2. Jobs-to-be-Done</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;">Apa "pekerjaan" yang diselesaikan tiap brand untuk pelanggannya? Ini mengidentifikasi value proposition sesungguhnya.</div>
+      </div>
+      <div class="box" style="background:var(--color-background-secondary);">
+        <div class="box-title" style="color:var(--color-text-primary);font-size:13px;">3. Positioning Map</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;">Pemetaan posisi kompetitif di 2 dimensi utama: breadth of service vs. depth of specialization.</div>
+      </div>
+    </div>
+    <div class="section-title">Dimensi analisis bisnis</div>
+    <div class="grid2">
+      <div>
+        <div class="score-row"><div class="score-label">Model bisnis</div><div style="font-size:12px;color:var(--color-text-secondary);">B2C retail / B2B fleet / marketplace</div></div>
+        <div class="score-row"><div class="score-label">Breadth of service</div><div style="font-size:12px;color:var(--color-text-secondary);">Luas cakupan layanan (generalis vs spesialis)</div></div>
+        <div class="score-row"><div class="score-label">Tech & digital maturity</div><div style="font-size:12px;color:var(--color-text-secondary);">Booking online, app, digital ecosystem</div></div>
+      </div>
+      <div>
+        <div class="score-row"><div class="score-label">Brand trust signals</div><div style="font-size:12px;color:var(--color-text-secondary);">ISO, garansi, kemitraan, reputasi</div></div>
+        <div class="score-row"><div class="score-label">Geographic reach</div><div style="font-size:12px;color:var(--color-text-secondary);">Coverage wilayah & jumlah cabang</div></div>
+        <div class="score-row"><div class="score-label">Customer segment</div><div style="font-size:12px;color:var(--color-text-secondary);">Mass market vs niche vs corporate</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">Jobs-to-be-done — Hiring reason per brand</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:10px;">Pelanggan tidak membeli "bengkel" — mereka menyewa solusi untuk sebuah masalah spesifik.</div>
+    <table class="matrix">
+      <tr><th>Brand</th><th>Pekerjaan utama yang diselesaikan</th><th>Pelanggan ideal</th></tr>
+      <tr><td>B-Quik</td><td>"Saya butuh satu tempat yang bisa handle semua kebutuhan mobil saya, bersih, dan ada garansinya"</td><td>Pemilik mobil urban, keluarga menengah</td></tr>
+      <tr><td>Jantra KK</td><td>"Mobil saya bunyi di kolong, saya butuh spesialis yang benar-benar paham kaki-kaki"</td><td>Pemilik mobil yang punya problem spesifik, loyal buyers</td></tr>
+      <tr><td>Nawilis</td><td>"Saya butuh bengkel spooring-balancing yang sudah teruji puluhan tahun"</td><td>Pemilik mobil yang memprioritaskan reputasi & legacy</td></tr>
+      <tr><td>Mariban</td><td>"Saya cari ban bagus dengan harga terbaik di area Jawa Tengah-DIY"</td><td>Pemilik mobil price-sensitive di Jateng-DIY</td></tr>
+      <tr><td>Carfix</td><td>"Saya mau servis standar bengkel resmi, tapi lebih murah dan bisa booking dulu dari rumah"</td><td>Pemilik mobil tech-savvy, kelas menengah, Jawa Tengah</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- B-QUIK -->
+<div id="panel-bquik" class="panel">
+  <div class="card">
+    <div class="brand-hero">
+      <div class="avatar" style="background:#E6F1FB;color:#185FA5;">BQ</div>
+      <div class="hero-info">
+        <h2>B-Quik Indonesia</h2>
+        <p>Jaringan bengkel one-stop-shop modern · 25+ cabang Jabodetabek · Asal Thailand</p>
+        <div class="dna-badge" style="background:#E6F1FB;color:#185FA5;">Brand DNA: "Modern. Transparan. One-stop."</div>
+      </div>
+    </div>
+    <div class="section-title">USP / differentiator utama</div>
+    <div class="usp-row">
+      <span class="usp-pill">Harga transparan pre-service</span>
+      <span class="usp-pill">Part lama dikembalikan ke customer</span>
+      <span class="usp-pill">Safety check gratis semua cabang</span>
+      <span class="usp-pill">Kemitraan Goodyear & ZF (Jerman)</span>
+      <span class="usp-pill">Riwayat servis online</span>
+      <span class="usp-pill">B2B Fleet services</span>
+    </div>
+    <div class="section-title">Scorecard bisnis</div>
+    <div class="score-row"><div class="score-label">Breadth of service</div><div class="score-bar"><div class="score-fill" style="width:95%;background:#378ADD;"></div></div><div class="score-val">9/10</div></div>
+    <div class="score-row"><div class="score-label">Tech & digital</div><div class="score-bar"><div class="score-fill" style="width:70%;background:#378ADD;"></div></div><div class="score-val">7/10</div></div>
+    <div class="score-row"><div class="score-label">Brand trust</div><div class="score-bar"><div class="score-fill" style="width:80%;background:#378ADD;"></div></div><div class="score-val">8/10</div></div>
+    <div class="score-row"><div class="score-label">Geographic reach</div><div class="score-bar"><div class="score-fill" style="width:65%;background:#378ADD;"></div></div><div class="score-val">6/10</div></div>
+    <div class="score-row"><div class="score-label">Price competitiveness</div><div class="score-bar"><div class="score-fill" style="width:60%;background:#378ADD;"></div></div><div class="score-val">6/10</div></div>
+    <div style="margin:14px 0 10px;"></div>
+    <div class="grid2">
+      <div class="s-box box">
+        <div class="box-title">Strengths — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Model one-stop-shop terlengkap: ban, oli, rem, aki, AC, shock — semua dalam satu atap</div>
+        <div class="box-item"><span class="dot">▸</span>Transparansi harga sebelum pengerjaan — pembeda kuat vs bengkel tradisional yang sering "kejutan"</div>
+        <div class="box-item"><span class="dot">▸</span>Kemitraan brand premium (Goodyear, ZF, Motul, Liqui-Moly) menaikkan persepsi kualitas</div>
+        <div class="box-item"><span class="dot">▸</span>Layanan B2B fleet — membuka revenue stream korporat yang stabil & recurring</div>
+        <div class="box-item"><span class="dot">▸</span>Garansi produk jangka panjang — membangun repeat purchase & loyalitas</div>
+      </div>
+      <div class="w-box box">
+        <div class="box-title">Weaknesses — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Konsentrasi di Jabodetabek — belum ada penetrasi signifikan ke kota tier 2-3</div>
+        <div class="box-item"><span class="dot">▸</span>Positioning harga premium — tidak kompetitif untuk segmen price-sensitive</div>
+        <div class="box-item"><span class="dot">▸</span>Tidak ada ekosistem digital yang kuat (app, loyalty program terintegrasi) seperti bengkel resmi ATPM</div>
+        <div class="box-item"><span class="dot">▸</span>Brand lokal terbatas — asal Thailand, berpotensi ada persepsi "kurang lokal"</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="o-box box">
+        <div class="box-title">Opportunities</div>
+        <div class="box-item"><span class="dot">▸</span>Ekspansi franchise ke kota tier 2 (Surabaya, Medan, Semarang) — pasarnya besar & underserved</div>
+        <div class="box-item"><span class="dot">▸</span>Membangun loyalty app yang integrasikan riwayat servis + reminder + reward</div>
+        <div class="box-item"><span class="dot">▸</span>Tambah layanan EV-ready (charger, battery check) seiring tren kendaraan listrik</div>
+        <div class="box-item"><span class="dot">▸</span>Perkuat B2B fleet dengan paket corporate yang lebih structured</div>
+      </div>
+      <div class="t-box box">
+        <div class="box-title">Threats</div>
+        <div class="box-item"><span class="dot">▸</span>Bengkel resmi ATPM (Auto2000, dll) semakin agresif dengan harga kompetitif</div>
+        <div class="box-item"><span class="dot">▸</span>Platform aggregator seperti Otoklix/Carsworld bisa menjadi perantara yang memotong relasi langsung</div>
+        <div class="box-item"><span class="dot">▸</span>Rising labor cost di Jabodetabek bisa menekan margin</div>
+      </div>
+    </div>
+    <div class="i-box">Verdict bisnis: B-Quik adalah "the safest choice" di segmennya — pelanggan tahu apa yang didapat. Kekuatan terbesar adalah kepercayaan melalui transparansi. Namun tanpa ekosistem digital yang lebih kuat dan ekspansi wilayah, pertumbuhannya akan plateau di Jabodetabek.</div>
+  </div>
+</div>
+
+<!-- JANTRA -->
+<div id="panel-jantra" class="panel">
+  <div class="card">
+    <div class="brand-hero">
+      <div class="avatar" style="background:#E1F5EE;color:#0F6E56;">JK</div>
+      <div class="hero-info">
+        <h2>Jantra Kaki Kaki (Jantra Grupo Indonesia)</h2>
+        <p>Bengkel spesialis kaki-kaki · Tbk (KAQI) di BEI · 11 workshop Jawa & Bali · ISO 9001:2015</p>
+        <div class="dna-badge" style="background:#E1F5EE;color:#0F6E56;">Brand DNA: "Spesialis. Bergaransi. Terpercaya."</div>
+      </div>
+    </div>
+    <div class="section-title">USP / differentiator utama</div>
+    <div class="usp-row">
+      <span class="usp-pill">Garansi 2 tahun (Jantra Protection)</span>
+      <span class="usp-pill">ISO 9001:2015 & ISO 45001:2018</span>
+      <span class="usp-pill">Rekondisi (bukan sekadar ganti) komponen</span>
+      <span class="usp-pill">Perusahaan tbk — transparansi publik</span>
+      <span class="usp-pill">Jantra Royale loyalty program</span>
+      <span class="usp-pill">Reservasi online & mobile app</span>
+    </div>
+    <div class="section-title">Scorecard bisnis</div>
+    <div class="score-row"><div class="score-label">Depth of specialization</div><div class="score-bar"><div class="score-fill" style="width:100%;background:#1D9E75;"></div></div><div class="score-val">10/10</div></div>
+    <div class="score-row"><div class="score-label">Brand trust</div><div class="score-bar"><div class="score-fill" style="width:90%;background:#1D9E75;"></div></div><div class="score-val">9/10</div></div>
+    <div class="score-row"><div class="score-label">Tech & digital</div><div class="score-bar"><div class="score-fill" style="width:65%;background:#1D9E75;"></div></div><div class="score-val">6/10</div></div>
+    <div class="score-row"><div class="score-label">Geographic reach</div><div class="score-bar"><div class="score-fill" style="width:40%;background:#1D9E75;"></div></div><div class="score-val">4/10</div></div>
+    <div class="score-row"><div class="score-label">Investor appeal</div><div class="score-bar"><div class="score-fill" style="width:90%;background:#1D9E75;"></div></div><div class="score-val">9/10</div></div>
+    <div style="margin:14px 0 10px;"></div>
+    <div class="grid2">
+      <div class="s-box box">
+        <div class="box-title">Strengths — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Satu-satunya bengkel spesialis kaki-kaki yang sudah Tbk — akses modal publik untuk ekspansi masif</div>
+        <div class="box-item"><span class="dot">▸</span>Garansi 2 tahun melalui "Jantra Protection" — value proposition unggul yang sulit ditandingi kompetitor</div>
+        <div class="box-item"><span class="dot">▸</span>Metode rekondisi (vs ganti baru) memberi value lebih hemat untuk pelanggan</div>
+        <div class="box-item"><span class="dot">▸</span>ISO 9001 + ISO 45001 — sinyal kredibilitas kelas korporat, rare di industri bengkel independen</div>
+        <div class="box-item"><span class="dot">▸</span>Topical authority sangat dalam di satu niche — sulit disaingi oleh generalis</div>
+      </div>
+      <div class="w-box box">
+        <div class="box-title">Weaknesses — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Layanan sangat terbatas pada kaki-kaki — pelanggan perlu ke tempat lain untuk kebutuhan lain (oli, ban, AC)</div>
+        <div class="box-item"><span class="dot">▸</span>Hanya 11 outlet di Jawa-Bali — jangkauan sangat terbatas untuk perusahaan publik</div>
+        <div class="box-item"><span class="dot">▸</span>Niche sempit membatasi wallet share per pelanggan</div>
+        <div class="box-item"><span class="dot">▸</span>Awareness publik masih rendah di luar basis pelanggan existing</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="o-box box">
+        <div class="box-title">Opportunities</div>
+        <div class="box-item"><span class="dot">▸</span>Dana IPO bisa digunakan untuk ekspansi cepat ke 50+ kota — first-mover advantage sebagai franchise spesialis kaki-kaki</div>
+        <div class="box-item"><span class="dot">▸</span>Bisa adjacent ke layanan suspensi EV — kaki-kaki EVadalah pain point nyata yang belum ada solusinya</div>
+        <div class="box-item"><span class="dot">▸</span>Model franchise dengan modal Rp300jt bisa scaling tanpa capex besar dari perusahaan</div>
+      </div>
+      <div class="t-box box">
+        <div class="box-title">Threats</div>
+        <div class="box-item"><span class="dot">▸</span>One-stop-shop seperti B-Quik dan Nawilis bisa menyedot customer dengan menawarkan layanan kaki-kaki juga</div>
+        <div class="box-item"><span class="dot">▸</span>Sebagai Tbk, tekanan performa kuartalan bisa mengorbankan strategi jangka panjang</div>
+        <div class="box-item"><span class="dot">▸</span>Harga saham volatile bisa mempengaruhi persepsi brand</div>
+      </div>
+    </div>
+    <div class="i-box">Verdict bisnis: Jantra KK adalah "the deep expert" — pelanggan datang karena tidak ada yang lebih tahu kaki-kaki selain mereka. Menjadi perusahaan publik adalah game-changer, tapi keberhasilan tergantung seberapa cepat modal IPO bisa diubah menjadi jaringan cabang yang menghasilkan revenue.</div>
+  </div>
+</div>
+
+<!-- NAWILIS -->
+<div id="panel-nawilis" class="panel">
+  <div class="card">
+    <div class="brand-hero">
+      <div class="avatar" style="background:#FBEAF0;color:#993556;">NW</div>
+      <div class="hero-info">
+        <h2>Nawilis</h2>
+        <p>Bengkel spooring & balancing specialist · Berdiri 1963 · 20 cabang · Jabodetabek & sekitarnya</p>
+        <div class="dna-badge" style="background:#FBEAF0;color:#993556;">Brand DNA: "Legacy. Keahlian 60 tahun. Rujukan."</div>
+      </div>
+    </div>
+    <div class="section-title">USP / differentiator utama</div>
+    <div class="usp-row">
+      <span class="usp-pill">Pengalaman 60+ tahun (est. 1963)</span>
+      <span class="usp-pill">Spooring 3D & Finish Balance</span>
+      <span class="usp-pill">Free check and go</span>
+      <span class="usp-pill">Layanan fleet B2B corporate</span>
+      <span class="usp-pill">Jasa 20% lebih murah dari bengkel resmi</span>
+      <span class="usp-pill">Bengkel rujukan nasional</span>
+    </div>
+    <div class="section-title">Scorecard bisnis</div>
+    <div class="score-row"><div class="score-label">Brand heritage</div><div class="score-bar"><div class="score-fill" style="width:100%;background:#D4537E;"></div></div><div class="score-val">10/10</div></div>
+    <div class="score-row"><div class="score-label">Depth of specialization</div><div class="score-bar"><div class="score-fill" style="width:80%;background:#D4537E;"></div></div><div class="score-val">8/10</div></div>
+    <div class="score-row"><div class="score-label">B2B / corporate service</div><div class="score-bar"><div class="score-fill" style="width:80%;background:#D4537E;"></div></div><div class="score-val">8/10</div></div>
+    <div class="score-row"><div class="score-label">Tech & digital</div><div class="score-bar"><div class="score-fill" style="width:30%;background:#D4537E;"></div></div><div class="score-val">3/10</div></div>
+    <div class="score-row"><div class="score-label">Price competitiveness</div><div class="score-bar"><div class="score-fill" style="width:75%;background:#D4537E;"></div></div><div class="score-val">7/10</div></div>
+    <div style="margin:14px 0 10px;"></div>
+    <div class="grid2">
+      <div class="s-box box">
+        <div class="box-title">Strengths — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Heritage 60+ tahun adalah moat yang tidak bisa dibeli — kepercayaan lintas generasi pelanggan</div>
+        <div class="box-item"><span class="dot">▸</span>Disebut "bengkel rujukan nasional" — bengkel lain pun merekomendasikan Nawilis untuk spooring</div>
+        <div class="box-item"><span class="dot">▸</span>Layanan fleet B2B dengan sistem penagihan & faktur pajak resmi — value unik untuk pelanggan korporat</div>
+        <div class="box-item"><span class="dot">▸</span>Finish balance & spooring 3D — teknologi lebih advance dari bengkel biasa</div>
+        <div class="box-item"><span class="dot">▸</span>Harga jasa 20% di bawah bengkel resmi dengan kualitas setara — sweet spot value proposition</div>
+      </div>
+      <div class="w-box box">
+        <div class="box-title">Weaknesses — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Digital presence sangat lemah — tidak ada booking online terintegrasi, tidak ada loyalty app</div>
+        <div class="box-item"><span class="dot">▸</span>Pertumbuhan sangat lambat (20 cabang setelah 60 tahun) — tidak ada ambisi ekspansi yang jelas</div>
+        <div class="box-item"><span class="dot">▸</span>Brand positioning terlalu bergantung pada legacy — berbahaya saat generasi pelanggan baru yang digital-native mulai mendominasi</div>
+        <div class="box-item"><span class="dot">▸</span>Website & digital marketing sangat minimal — anomali untuk brand setua ini</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="o-box box">
+        <div class="box-title">Opportunities</div>
+        <div class="box-item"><span class="dot">▸</span>Digitalisasi pengalaman pelanggan — booking online + loyalty program bisa membuka segmen pelanggan muda tanpa menggerus pelanggan lama</div>
+        <div class="box-item"><span class="dot">▸</span>Ekspansi B2B fleet secara agresif — heritage 60 tahun adalah trust signal terkuat untuk akuisisi klien korporat besar</div>
+        <div class="box-item"><span class="dot">▸</span>Franchise model menggunakan brand heritage sebagai selling point</div>
+      </div>
+      <div class="t-box box">
+        <div class="box-title">Threats</div>
+        <div class="box-item"><span class="dot">▸</span>Generasi pelanggan baru (milenial, Gen Z) tidak punya hubungan emosional dengan heritage Nawilis</div>
+        <div class="box-item"><span class="dot">▸</span>Jika tidak digitalisasi dalam 3-5 tahun, Nawilis bisa menjadi "brand masa lalu" yang kehilangan relevansi</div>
+        <div class="box-item"><span class="dot">▸</span>Jantra KK yang lebih agresif bisa mengambil mindshare di niche spooring & kaki-kaki</div>
+      </div>
+    </div>
+    <div class="i-box">Verdict bisnis: Nawilis adalah "the trusted veteran" — pelanggan datang karena reputasi yang tidak perlu dijelaskan. Tapi tanpa transformasi digital yang serius, mereka berisiko menjadi brand nostalgia yang kehilangan relevansi. Heritage adalah aset terbesar sekaligus jebakan terbesar mereka.</div>
+  </div>
+</div>
+
+<!-- MARIBAN -->
+<div id="panel-mariban" class="panel">
+  <div class="card">
+    <div class="brand-hero">
+      <div class="avatar" style="background:#FAEEDA;color:#854F0B;">MB</div>
+      <div class="hero-info">
+        <h2>Mariban (Mari Ban)</h2>
+        <p>Toko ban & spooring specialist · 20+ cabang Jateng-DIY · Fokus harga termurah</p>
+        <div class="dna-badge" style="background:#FAEEDA;color:#854F0B;">Brand DNA: "Termurah. Lengkap. Lokal Jateng-DIY."</div>
+      </div>
+    </div>
+    <div class="section-title">USP / differentiator utama</div>
+    <div class="usp-row">
+      <span class="usp-pill">Klaim "toko ban termurah Jateng-DIY"</span>
+      <span class="usp-pill">10+ merk ban tersedia (Bridgestone, Dunlop, GT Radial, dll)</span>
+      <span class="usp-pill">Free nitrogen seumur hidup member</span>
+      <span class="usp-pill">Free spooring 3D & balancing saat beli ban</span>
+      <span class="usp-pill">Tire consultant via WhatsApp</span>
+      <span class="usp-pill">Cek stok real-time per cabang di website</span>
+    </div>
+    <div class="section-title">Scorecard bisnis</div>
+    <div class="score-row"><div class="score-label">Price competitiveness</div><div class="score-bar"><div class="score-fill" style="width:100%;background:#BA7517;"></div></div><div class="score-val">10/10</div></div>
+    <div class="score-row"><div class="score-label">Product breadth (ban)</div><div class="score-bar"><div class="score-fill" style="width:90%;background:#BA7517;"></div></div><div class="score-val">9/10</div></div>
+    <div class="score-row"><div class="score-label">Tech & digital (UX web)</div><div class="score-bar"><div class="score-fill" style="width:70%;background:#BA7517;"></div></div><div class="score-val">7/10</div></div>
+    <div class="score-row"><div class="score-label">Geographic focus</div><div class="score-bar"><div class="score-fill" style="width:40%;background:#BA7517;"></div></div><div class="score-val">4/10</div></div>
+    <div class="score-row"><div class="score-label">Breadth of service</div><div class="score-bar"><div class="score-fill" style="width:35%;background:#BA7517;"></div></div><div class="score-val">3/10</div></div>
+    <div style="margin:14px 0 10px;"></div>
+    <div class="grid2">
+      <div class="s-box box">
+        <div class="box-title">Strengths — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Price leadership yang jelas — "termurah di Jateng-DIY" adalah positioning yang mudah diingat & diverifikasi</div>
+        <div class="box-item"><span class="dot">▸</span>Fitur cek stok real-time per cabang di website — UX lebih advance dari kompetitor, mengurangi friction pembelian</div>
+        <div class="box-item"><span class="dot">▸</span>Bundle promo kuat: beli ban → gratis spooring 3D + balancing + nitrogen seumur hidup — sangat kompetitif untuk pelanggan yang hitung-hitungan</div>
+        <div class="box-item"><span class="dot">▸</span>Coverage brand ban sangat luas (10+ merk) — melayani berbagai segmen budget sekaligus</div>
+      </div>
+      <div class="w-box box">
+        <div class="box-title">Weaknesses — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Terlalu terfokus pada produk ban — tidak ada layanan mesin, AC, atau sistem lain</div>
+        <div class="box-item"><span class="dot">▸</span>Geografis sangat terbatas di Jateng-DIY — total addressable market kecil</div>
+        <div class="box-item"><span class="dot">▸</span>Brand awareness di luar Jateng-DIY nyaris nol — tidak ada ambisi nasional yang terlihat</div>
+        <div class="box-item"><span class="dot">▸</span>Positioning "termurah" rawan price war — bisa dihantam kompetitor baru dengan modal lebih besar</div>
+        <div class="box-item"><span class="dot">▸</span>Tidak ada narasi brand yang emosional — murni transaksional, loyalitas pelanggan tipis</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="o-box box">
+        <div class="box-title">Opportunities</div>
+        <div class="box-item"><span class="dot">▸</span>Ekspansi ke marketplace online (Tokopedia, Shopee) untuk penjualan ban — bisa menembus batas geografis Jateng-DIY</div>
+        <div class="box-item"><span class="dot">▸</span>Membangun loyalty ecosystem berbasis member (nitrogen seumur hidup adalah hook yang kuat)</div>
+        <div class="box-item"><span class="dot">▸</span>B2B: supply ban untuk armada transportasi, rental, atau perusahaan logistik di Jateng-DIY</div>
+      </div>
+      <div class="t-box box">
+        <div class="box-title">Threats</div>
+        <div class="box-item"><span class="dot">▸</span>Marketplace e-commerce bisa menjual ban lebih murah dengan pengiriman ke rumah — mendisrupsi model ritel fisik</div>
+        <div class="box-item"><span class="dot">▸</span>Chain besar seperti B-Quik atau Nawilis bisa masuk ke Jateng-DIY dan merebut pelanggan dengan brand yang lebih kuat</div>
+        <div class="box-item"><span class="dot">▸</span>Positioning "termurah" tidak sustainable jika ada yang lebih murah lagi</div>
+      </div>
+    </div>
+    <div class="i-box">Verdict bisnis: Mariban adalah "the price champion" di market lokal. Fitur cek stok real-time & bundle promo adalah inovasi UX yang sebenarnya lebih baik dari kompetitor. Tapi tanpa ekspansi dan diversifikasi layanan, mereka rentan terhadap disrupsi dari marketplace dan pemain nasional.</div>
+  </div>
+</div>
+
+<!-- CARFIX -->
+<div id="panel-carfix" class="panel">
+  <div class="card">
+    <div class="brand-hero">
+      <div class="avatar" style="background:#EEEDFE;color:#534AB7;">CF</div>
+      <div class="hero-info">
+        <h2>CARfix</h2>
+        <p>Bengkel modern "setara bengkel resmi" · Berdiri 2007 · 20 outlet · 5 provinsi · Jawa Tengah-sentris</p>
+        <div class="dna-badge" style="background:#EEEDFE;color:#534AB7;">Brand DNA: "Modern. Transparan. Kualitas resmi. Harga hemat."</div>
+      </div>
+    </div>
+    <div class="section-title">USP / differentiator utama</div>
+    <div class="usp-row">
+      <span class="usp-pill">Estimasi harga sebelum servis (via app)</span>
+      <span class="usp-pill">Home service & antar-jemput mobil</span>
+      <span class="usp-pill">Sparepart 30-40% lebih murah dari bengkel lain</span>
+      <span class="usp-pill">Jasa 20% lebih murah dari bengkel resmi</span>
+      <span class="usp-pill">Riwayat servis digital (Carsworld app)</span>
+      <span class="usp-pill">Mitra prinsipal OEM (Astra, Denso, Gajah Tunggal)</span>
+    </div>
+    <div class="section-title">Scorecard bisnis</div>
+    <div class="score-row"><div class="score-label">Tech & digital</div><div class="score-bar"><div class="score-fill" style="width:85%;background:#7F77DD;"></div></div><div class="score-val">8/10</div></div>
+    <div class="score-row"><div class="score-label">Price competitiveness</div><div class="score-bar"><div class="score-fill" style="width:85%;background:#7F77DD;"></div></div><div class="score-val">8/10</div></div>
+    <div class="score-row"><div class="score-label">Breadth of service</div><div class="score-bar"><div class="score-fill" style="width:80%;background:#7F77DD;"></div></div><div class="score-val">8/10</div></div>
+    <div class="score-row"><div class="score-label">Brand trust</div><div class="score-bar"><div class="score-fill" style="width:60%;background:#7F77DD;"></div></div><div class="score-val">6/10</div></div>
+    <div class="score-row"><div class="score-label">Geographic reach</div><div class="score-bar"><div class="score-fill" style="width:50%;background:#7F77DD;"></div></div><div class="score-val">5/10</div></div>
+    <div style="margin:14px 0 10px;"></div>
+    <div class="grid2">
+      <div class="s-box box">
+        <div class="box-title">Strengths — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Proposisi nilai paling tajam: "kualitas bengkel resmi, harga bengkel umum" — mudah dipahami pelanggan</div>
+        <div class="box-item"><span class="dot">▸</span>Home service & antar-jemput — fitur yang genuinely menyelesaikan pain point pelanggan sibuk</div>
+        <div class="box-item"><span class="dot">▸</span>Transparansi harga pre-booking melalui app — kepercayaan terbangun sebelum pelanggan datang</div>
+        <div class="box-item"><span class="dot">▸</span>Mitra prinsipal OEM (Astra Otoparts, Denso, Gajah Tunggal) — kualitas sparepart tidak diragukan</div>
+        <div class="box-item"><span class="dot">▸</span>Model joint venture memungkinkan ekspansi capital-light yang scalable</div>
+      </div>
+      <div class="w-box box">
+        <div class="box-title">Weaknesses — bisnis/produk</div>
+        <div class="box-item"><span class="dot">▸</span>Brand awareness sangat terbatas — di luar Jateng, nama Carfix nyaris tidak dikenal</div>
+        <div class="box-item"><span class="dot">▸</span>Terlalu tergantung pada ekosistem Carsworld — jika platform pihak ketiga ini bermasalah, booking sistem ikut terganggu</div>
+        <div class="box-item"><span class="dot">▸</span>Ekspansi ke Jakarta stagnan — 5+ tahun hanya beberapa outlet di Jabodetabek</div>
+        <div class="box-item"><span class="dot">▸</span>Garansi hanya 1 minggu — jauh di bawah Jantra KK (2 tahun) dan B-Quik yang lebih panjang</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="o-box box">
+        <div class="box-title">Opportunities</div>
+        <div class="box-item"><span class="dot">▸</span>Dengan DR terkuat (29) dan model digital yang sudah ada, ekspansi konten digital bisa mendatangkan customer acquisition organik masif</div>
+        <div class="box-item"><span class="dot">▸</span>Home service & antar-jemput adalah kategori dengan demand tinggi — bisa dijadikan layanan premium standalone</div>
+        <div class="box-item"><span class="dot">▸</span>Bangun B2B fleet dengan positioning "lebih murah dari bengkel resmi, lebih dipercaya dari bengkel biasa"</div>
+      </div>
+      <div class="t-box box">
+        <div class="box-title">Threats</div>
+        <div class="box-item"><span class="dot">▸</span>Aggregator seperti Otoklix & Carsworld bisa menjadi kompetitor langsung jika mereka punya bengkel sendiri</div>
+        <div class="box-item"><span class="dot">▸</span>B-Quik dengan modal lebih besar juga menawarkan value proposition serupa di Jabodetabek</div>
+        <div class="box-item"><span class="dot">▸</span>Perluasan bengkel resmi ATPM ke tier 2 kota bisa menggerus segmen Carfix</div>
+      </div>
+    </div>
+    <div class="i-box">Verdict bisnis: Carfix adalah "the smart choice" — pelanggan yang tahu apa yang mereka inginkan akan langsung suka. Model bisnis sudah benar, proposisi nilai tajam, digital ecosystem ada — tapi semua ini masih tersembunyi karena brand awareness dan konten digital yang terlalu minim.</div>
+  </div>
+</div>
+
+<!-- MATRIX -->
+<div id="panel-matrix" class="panel">
+  <div class="card">
+    <div class="section-title">Competitive positioning — service breadth vs specialization depth</div>
+    <div style="position:relative;width:100%;padding-top:56%;background:var(--color-background-secondary);border-radius:8px;margin-bottom:14px;overflow:hidden;">
+      <svg viewBox="0 0 560 320" style="position:absolute;top:0;left:0;width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="60" y1="270" x2="520" y2="270" stroke="#888" stroke-width="0.8"/>
+        <line x1="60" y1="20" x2="60" y2="270" stroke="#888" stroke-width="0.8"/>
+        <!-- Labels -->
+        <text x="280" y="295" text-anchor="middle" font-size="11" fill="#888">Breadth of service (generalis → one-stop)</text>
+        <text x="30" y="145" text-anchor="middle" font-size="11" fill="#888" transform="rotate(-90,30,145)">Brand trust / specialization depth</text>
+        <!-- Quadrant labels -->
+        <text x="100" y="45" font-size="10" fill="#aaa">Niche specialists</text>
+        <text x="360" y="45" font-size="10" fill="#aaa">Full-service leaders</text>
+        <text x="100" y="260" font-size="10" fill="#aaa">Limited players</text>
+        <text x="360" y="260" font-size="10" fill="#aaa">Volume generalists</text>
+        <!-- Dividers -->
+        <line x1="290" y1="20" x2="290" y2="270" stroke="#ccc" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="145" x2="520" y2="145" stroke="#ccc" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <!-- Bubbles -->
+        <!-- B-Quik: high breadth, medium trust -->
+        <circle cx="430" cy="100" r="28" fill="#B5D4F4" stroke="#378ADD" stroke-width="1.5"/>
+        <text x="430" y="97" text-anchor="middle" font-size="10" font-weight="500" fill="#0C447C">B-Quik</text>
+        <text x="430" y="110" text-anchor="middle" font-size="9" fill="#185FA5">One-stop leader</text>
+        <!-- Jantra: low breadth, very high trust -->
+        <circle cx="130" cy="48" r="24" fill="#9FE1CB" stroke="#1D9E75" stroke-width="1.5"/>
+        <text x="130" y="45" text-anchor="middle" font-size="10" font-weight="500" fill="#085041">Jantra</text>
+        <text x="130" y="58" text-anchor="middle" font-size="9" fill="#0F6E56">Deep expert</text>
+        <!-- Nawilis: medium breadth, high trust -->
+        <circle cx="230" cy="62" r="22" fill="#F4C0D1" stroke="#D4537E" stroke-width="1.5"/>
+        <text x="230" y="59" text-anchor="middle" font-size="10" font-weight="500" fill="#72243E">Nawilis</text>
+        <text x="230" y="72" text-anchor="middle" font-size="9" fill="#993556">Heritage spec.</text>
+        <!-- Mariban: low breadth, low trust (local) -->
+        <circle cx="145" cy="220" r="20" fill="#FAC775" stroke="#BA7517" stroke-width="1.5"/>
+        <text x="145" y="217" text-anchor="middle" font-size="10" font-weight="500" fill="#633806">Mariban</text>
+        <text x="145" y="230" text-anchor="middle" font-size="9" fill="#854F0B">Price leader</text>
+        <!-- Carfix: high breadth, medium trust -->
+        <circle cx="390" cy="165" r="22" fill="#CECBF6" stroke="#7F77DD" stroke-width="1.5"/>
+        <text x="390" y="162" text-anchor="middle" font-size="10" font-weight="500" fill="#26215C">Carfix</text>
+        <text x="390" y="175" text-anchor="middle" font-size="9" fill="#534AB7">Digital pioneer</text>
+      </svg>
+    </div>
+    <div class="section-title" style="margin-top:4px;">Head-to-head comparison matrix</div>
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <tr>
+          <th>Dimensi</th>
+          <th>B-Quik</th>
+          <th>Jantra KK</th>
+          <th>Nawilis</th>
+          <th>Mariban</th>
+          <th>Carfix</th>
+        </tr>
+        <tr>
+          <td>Model bisnis</td>
+          <td>One-stop retail + B2B</td>
+          <td>Niche specialist + Tbk</td>
+          <td>Specialist + B2B fleet</td>
+          <td>Toko ban + service</td>
+          <td>Modern bengkel + digital booking</td>
+        </tr>
+        <tr>
+          <td>Target segmen</td>
+          <td><span class="chip chip-b">Urban middle-up</span></td>
+          <td><span class="chip chip-g">Kaki-kaki problem owners</span></td>
+          <td><span class="chip chip-b">Middle + corporate</span></td>
+          <td><span class="chip chip-y">Price-sensitive Jateng-DIY</span></td>
+          <td><span class="chip chip-b">Tech-savvy middle</span></td>
+        </tr>
+        <tr>
+          <td>Keunggulan harga</td>
+          <td><span class="chip chip-r">Premium</span></td>
+          <td><span class="chip chip-y">Medium</span></td>
+          <td><span class="chip chip-g">20% cheaper than ATPM</span></td>
+          <td><span class="chip chip-g">Cheapest (claim)</span></td>
+          <td><span class="chip chip-g">20-40% cheaper vs resmi</span></td>
+        </tr>
+        <tr>
+          <td>Garansi layanan</td>
+          <td><span class="chip chip-g">Garansi panjang</span></td>
+          <td><span class="chip chip-g">2 tahun (Jantra Protection)</span></td>
+          <td><span class="chip chip-y">Tidak eksplisit</span></td>
+          <td><span class="chip chip-y">Per bundle</span></td>
+          <td><span class="chip chip-r">1 minggu</span></td>
+        </tr>
+        <tr>
+          <td>Digital / booking</td>
+          <td><span class="chip chip-y">Web + WA</span></td>
+          <td><span class="chip chip-g">App + web booking</span></td>
+          <td><span class="chip chip-r">Minim</span></td>
+          <td><span class="chip chip-g">Real-time stok web</span></td>
+          <td><span class="chip chip-g">App + home service</span></td>
+        </tr>
+        <tr>
+          <td>Geographic coverage</td>
+          <td><span class="chip chip-g">Jabodetabek (25+)</span></td>
+          <td><span class="chip chip-y">Jawa-Bali (11)</span></td>
+          <td><span class="chip chip-g">Jabodetabek (20)</span></td>
+          <td><span class="chip chip-r">Jateng-DIY only (20+)</span></td>
+          <td><span class="chip chip-y">Jateng-DIY + Jakarta (20)</span></td>
+        </tr>
+        <tr>
+          <td>Differentiator kunci</td>
+          <td>Kemitraan brand premium (Goodyear, ZF)</td>
+          <td>Rekondisi + garansi 2 tahun</td>
+          <td>60+ tahun legacy & referral</td>
+          <td>Harga + stok real-time + bundle promo</td>
+          <td>Home service + price transparency</td>
+        </tr>
+        <tr>
+          <td>Gap terbesar</td>
+          <td><span class="chip chip-r">Link building & wilayah</span></td>
+          <td><span class="chip chip-r">Jumlah outlet & niche sempit</span></td>
+          <td><span class="chip chip-r">Digital transformation</span></td>
+          <td><span class="chip chip-r">Brand & layanan diversification</span></td>
+          <td><span class="chip chip-r">Brand awareness & konten</span></td>
+        </tr>
+      </table>
+    </div>
+    <div style="margin-top:14px;" class="section-title">Verdict — siapa yang paling siap menang?</div>
+    <div class="verdict-grid">
+      <div class="verdict-card">
+        <div class="verdict-star">🏆</div>
+        <div class="verdict-name">Jangka pendek</div>
+        <div class="verdict-label">B-Quik</div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);">Traffic & brand terbesar</div>
+      </div>
+      <div class="verdict-card">
+        <div class="verdict-star">📈</div>
+        <div class="verdict-name">Potensi tumbuh</div>
+        <div class="verdict-label">Carfix</div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);">DR + model digital solid</div>
+      </div>
+      <div class="verdict-card">
+        <div class="verdict-star">🎯</div>
+        <div class="verdict-name">Niche dominance</div>
+        <div class="verdict-label">Jantra KK</div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);">IPO + garansi terkuat</div>
+      </div>
+      <div class="verdict-card">
+        <div class="verdict-star">⚠️</div>
+        <div class="verdict-name">Perlu transformasi</div>
+        <div class="verdict-label">Nawilis</div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);">Legacy kuat, digital lemah</div>
+      </div>
+      <div class="verdict-card">
+        <div class="verdict-star">📍</div>
+        <div class="verdict-name">Local champion</div>
+        <div class="verdict-label">Mariban</div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);">Kuat di Jateng-DIY saja</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.tab');
+  const map = ['framework','bquik','jantra','nawilis','mariban','carfix','matrix'];
+  tabs[map.indexOf(id)].classList.add('active');
+}
+</script>
+
+    </section>
+  </main>
+  <script>
+    function sendPrompt(text) {
+      if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+      alert('Prompt rekomendasi sudah disiapkan:\n\n' + text);
+    }
+  </script>
+</body>
+</html>

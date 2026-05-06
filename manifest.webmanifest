@@ -1,0 +1,17 @@
+{
+  "name": "VNDC Web SEO Landing",
+  "short_name": "VNDC Growth",
+  "description": "Landing page layanan website dan SEO VNDC untuk bisnis menengah.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111118",
+  "icons": [
+    {
+      "src": "vndc-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
