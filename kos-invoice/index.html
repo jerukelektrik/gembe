@@ -440,7 +440,206 @@
     </main>
 
     <script>
-        // App behavior is added in later tasks.
+        const state = {
+            invoiceNumber: createInvoiceNumber(new Date()),
+            invoiceDate: new Date(),
+            items: [createItem()]
+        };
+
+        const fields = {
+            kosName: document.querySelector('#kosName'),
+            tenantName: document.querySelector('#tenantName'),
+            roomNumber: document.querySelector('#roomNumber'),
+            billingPeriod: document.querySelector('#billingPeriod'),
+            dueDate: document.querySelector('#dueDate'),
+            itemList: document.querySelector('#itemList'),
+            addItemButton: document.querySelector('#addItemButton'),
+            downloadButton: document.querySelector('#downloadButton'),
+            statusMessage: document.querySelector('#statusMessage'),
+            invoiceNumber: document.querySelector('#invoiceNumber'),
+            totalAmount: document.querySelector('#totalAmount'),
+            previewKosName: document.querySelector('#previewKosName'),
+            previewInvoiceNumber: document.querySelector('#previewInvoiceNumber'),
+            previewInvoiceDate: document.querySelector('#previewInvoiceDate'),
+            previewTenantName: document.querySelector('#previewTenantName'),
+            previewRoomPeriod: document.querySelector('#previewRoomPeriod'),
+            previewDueDate: document.querySelector('#previewDueDate'),
+            previewItems: document.querySelector('#previewItems'),
+            previewTotal: document.querySelector('#previewTotal')
+        };
+
+        function createItem() {
+            return {
+                id: `item-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                name: '',
+                amount: ''
+            };
+        }
+
+        function createInvoiceNumber(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            return `INV-${year}${month}${day}-${hour}${minute}`;
+        }
+
+        function formatRupiah(value) {
+            const number = Number(value) || 0;
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(number).replace(/\s/g, '');
+        }
+
+        function formatDateLabel(value) {
+            if (!value) {
+                return 'Pilih tanggal';
+            }
+
+            const date = value instanceof Date ? value : new Date(`${value}T00:00:00`);
+            return new Intl.DateTimeFormat('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }).format(date);
+        }
+
+        function getInvoiceData() {
+            const validItems = state.items
+                .map((item) => ({
+                    name: item.name.trim(),
+                    amount: Number(item.amount) || 0
+                }))
+                .filter((item) => item.name && item.amount > 0);
+
+            const total = validItems.reduce((sum, item) => sum + item.amount, 0);
+
+            return {
+                invoiceNumber: state.invoiceNumber,
+                invoiceDate: state.invoiceDate,
+                kosName: fields.kosName.value.trim(),
+                tenantName: fields.tenantName.value.trim(),
+                roomNumber: fields.roomNumber.value.trim(),
+                billingPeriod: fields.billingPeriod.value.trim(),
+                dueDate: fields.dueDate.value,
+                items: validItems,
+                total
+            };
+        }
+
+        function renderItems() {
+            fields.itemList.innerHTML = '';
+
+            state.items.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'item-row';
+                row.dataset.itemId = item.id;
+                row.innerHTML = `
+                    <div class="field">
+                        <label for="item-name-${index}">Nama item</label>
+                        <input id="item-name-${index}" data-item-field="name" value="${escapeAttribute(item.name)}" placeholder="Sewa kamar">
+                    </div>
+                    <div class="field">
+                        <label for="item-amount-${index}">Nominal</label>
+                        <input id="item-amount-${index}" data-item-field="amount" value="${escapeAttribute(item.amount)}" inputmode="numeric" placeholder="750000">
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn danger" type="button" data-remove-item ${state.items.length === 1 ? 'disabled' : ''}>Hapus</button>
+                    </div>
+                `;
+                fields.itemList.appendChild(row);
+            });
+        }
+
+        function escapeAttribute(value) {
+            return String(value).replace(/[&<>"]/g, (character) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;'
+            }[character]));
+        }
+
+        function renderPreview() {
+            const data = getInvoiceData();
+            fields.invoiceNumber.textContent = data.invoiceNumber;
+            fields.totalAmount.textContent = formatRupiah(data.total);
+            fields.previewKosName.textContent = data.kosName || 'Nama Kos';
+            fields.previewInvoiceNumber.textContent = data.invoiceNumber;
+            fields.previewInvoiceDate.textContent = formatDateLabel(data.invoiceDate);
+            fields.previewTenantName.textContent = data.tenantName || 'Nama penyewa';
+            fields.previewRoomPeriod.textContent = `${data.roomNumber || 'Kamar'} - ${data.billingPeriod || 'Periode'}`;
+            fields.previewDueDate.textContent = formatDateLabel(data.dueDate);
+            fields.previewTotal.textContent = formatRupiah(data.total);
+
+            fields.previewItems.innerHTML = '';
+            const previewItems = data.items.length > 0 ? data.items : [{ name: 'Item tagihan', amount: 0 }];
+            previewItems.forEach((item) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${escapeHtml(item.name)}</td><td>${formatRupiah(item.amount)}</td>`;
+                fields.previewItems.appendChild(row);
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>]/g, (character) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;'
+            }[character]));
+        }
+
+        function syncItemFromInput(input) {
+            const row = input.closest('.item-row');
+            const item = state.items.find((entry) => entry.id === row.dataset.itemId);
+            if (!item) {
+                return;
+            }
+
+            const field = input.dataset.itemField;
+            item[field] = field === 'amount' ? input.value.replace(/[^0-9]/g, '') : input.value;
+            if (field === 'amount' && input.value !== item.amount) {
+                input.value = item.amount;
+            }
+            renderPreview();
+        }
+
+        fields.addItemButton.addEventListener('click', () => {
+            state.items.push(createItem());
+            renderItems();
+            renderPreview();
+        });
+
+        fields.itemList.addEventListener('input', (event) => {
+            if (event.target.matches('[data-item-field]')) {
+                syncItemFromInput(event.target);
+            }
+        });
+
+        fields.itemList.addEventListener('click', (event) => {
+            if (!event.target.matches('[data-remove-item]')) {
+                return;
+            }
+
+            const row = event.target.closest('.item-row');
+            state.items = state.items.filter((item) => item.id !== row.dataset.itemId);
+            if (state.items.length === 0) {
+                state.items.push(createItem());
+            }
+            renderItems();
+            renderPreview();
+        });
+
+        [fields.kosName, fields.tenantName, fields.roomNumber, fields.billingPeriod, fields.dueDate].forEach((field) => {
+            field.addEventListener('input', renderPreview);
+            field.addEventListener('change', renderPreview);
+        });
+
+        renderItems();
+        renderPreview();
     </script>
 </body>
 
