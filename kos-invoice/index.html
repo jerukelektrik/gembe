@@ -584,6 +584,158 @@
             });
         }
 
+        function clearErrors() {
+            document.querySelectorAll('[data-error-for]').forEach((node) => {
+                node.textContent = '';
+            });
+            fields.statusMessage.textContent = '';
+        }
+
+        function setError(fieldName, message) {
+            const target = document.querySelector(`[data-error-for="${fieldName}"]`);
+            if (target) {
+                target.textContent = message;
+            }
+        }
+
+        function validateInvoice(data) {
+            clearErrors();
+            const errors = [];
+
+            if (!data.kosName) {
+                errors.push(['kosName', 'Nama kos wajib diisi.']);
+            }
+            if (!data.tenantName) {
+                errors.push(['tenantName', 'Nama penyewa wajib diisi.']);
+            }
+            if (!data.roomNumber) {
+                errors.push(['roomNumber', 'Nomor kamar wajib diisi.']);
+            }
+            if (!data.billingPeriod) {
+                errors.push(['billingPeriod', 'Periode tagihan wajib diisi.']);
+            }
+            if (!data.dueDate) {
+                errors.push(['dueDate', 'Tanggal jatuh tempo wajib dipilih.']);
+            }
+            if (data.items.length === 0) {
+                errors.push(['items', 'Minimal satu item tagihan dengan nominal lebih dari Rp0.']);
+            }
+
+            errors.forEach(([fieldName, message]) => setError(fieldName, message));
+            return errors.length === 0;
+        }
+
+        function getPdfApis() {
+            const jsPdfApi = window.jspdf && window.jspdf.jsPDF;
+            if (!jsPdfApi || !window.jspdf || typeof jsPdfApi.API.autoTable !== 'function') {
+                return null;
+            }
+            return jsPdfApi;
+        }
+
+        function createPdfFileName(data) {
+            const safeTenantName = data.tenantName
+                .replace(/[^a-zA-Z0-9\-\s]/g, '')
+                .trim()
+                .replace(/\s+/g, '-') || 'penyewa';
+            return `${data.invoiceNumber}-${safeTenantName}.pdf`;
+        }
+
+        function downloadInvoicePdf() {
+            const data = getInvoiceData();
+            if (!validateInvoice(data)) {
+                fields.statusMessage.textContent = 'Periksa kembali field yang masih merah.';
+                return;
+            }
+
+            const JsPdf = getPdfApis();
+            if (!JsPdf) {
+                fields.statusMessage.textContent = 'Library PDF belum siap. Refresh halaman atau cek koneksi internet.';
+                return;
+            }
+
+            const doc = new JsPdf({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const accent = [15, 139, 141];
+            const ink = [23, 35, 38];
+            const muted = [96, 116, 120];
+
+            doc.setTextColor(...ink);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(22);
+            doc.text(data.kosName, 16, 20);
+
+            doc.setFontSize(10);
+            doc.setTextColor(...muted);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Invoice tagihan kos', 16, 27);
+
+            doc.setDrawColor(...accent);
+            doc.setLineWidth(1.2);
+            doc.line(16, 33, 194, 33);
+
+            doc.setTextColor(...ink);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('Invoice', 144, 20);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(data.invoiceNumber, 144, 26);
+            doc.text(formatDateLabel(data.invoiceDate), 144, 32);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.text('Kepada', 16, 48);
+            doc.text('Jatuh Tempo', 144, 48);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.text(data.tenantName, 16, 55);
+            doc.text(`Kamar ${data.roomNumber}`, 16, 62);
+            doc.text(`Periode ${data.billingPeriod}`, 16, 69);
+            doc.text(formatDateLabel(data.dueDate), 144, 55);
+
+            doc.autoTable({
+                startY: 82,
+                head: [['Item', 'Nominal']],
+                body: data.items.map((item) => [item.name, formatRupiah(item.amount)]),
+                styles: {
+                    font: 'helvetica',
+                    fontSize: 10,
+                    cellPadding: 3,
+                    textColor: ink
+                },
+                headStyles: {
+                    fillColor: accent,
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold'
+                },
+                columnStyles: {
+                    0: { cellWidth: 118 },
+                    1: { cellWidth: 52, halign: 'right' }
+                },
+                margin: { left: 16, right: 16 }
+            });
+
+            const totalY = doc.lastAutoTable.finalY + 14;
+            doc.setFillColor(229, 244, 243);
+            doc.roundedRect(116, totalY - 8, 78, 18, 2, 2, 'F');
+            doc.setTextColor(...muted);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.text('Total', 122, totalY + 3);
+            doc.setTextColor(...ink);
+            doc.setFontSize(14);
+            doc.text(formatRupiah(data.total), 190, totalY + 3, { align: 'right' });
+
+            doc.setTextColor(...muted);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text('Harap melakukan pembayaran sebelum jatuh tempo.', 16, Math.min(totalY + 24, 280));
+
+            doc.save(createPdfFileName(data));
+            fields.statusMessage.textContent = 'PDF berhasil dibuat.';
+        }
+
         function escapeHtml(value) {
             return String(value).replace(/[&<>]/g, (character) => ({
                 '&': '&amp;',
@@ -637,6 +789,8 @@
             field.addEventListener('input', renderPreview);
             field.addEventListener('change', renderPreview);
         });
+
+        fields.downloadButton.addEventListener('click', downloadInvoicePdf);
 
         renderItems();
         renderPreview();
