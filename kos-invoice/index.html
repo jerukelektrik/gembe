@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generator invoice PDF sederhana untuk kos-kosan.">
+    <meta name="theme-color" content="#0f8b8d">
+    <title>Invoice Kos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+    <style>
+        :root {
+            --ink: #172326;
+            --muted: #66797d;
+            --line: #d9e5e7;
+            --paper: #f6fbfa;
+            --panel: #ffffff;
+            --accent: #0f8b8d;
+            --accent-dark: #0a6668;
+            --accent-soft: #e5f4f3;
+            --warning: #b45309;
+            --danger: #b42318;
+            --shadow: 0 18px 42px rgba(23, 35, 38, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(180deg, #f6fbfa 0%, #eef7f6 100%);
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.58;
+        }
+
+        .app-shell {
+            width: min(1120px, calc(100% - 28px));
+            margin: 0 auto;
+            padding: 18px 0 42px;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 0 20px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: clamp(1.6rem, 7vw, 2.7rem);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .brand p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 0.96rem;
+        }
+
+        .invoice-chip {
+            flex: 0 0 auto;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 10px 12px;
+            background: var(--panel);
+            color: var(--accent-dark);
+            font-weight: 800;
+            box-shadow: 0 10px 24px rgba(23, 35, 38, 0.08);
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header,
+        .panel-body {
+            padding: 16px;
+        }
+
+        .panel-header {
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            letter-spacing: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        label,
+        .field-label {
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        input {
+            min-height: 46px;
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 0 12px;
+            color: var(--ink);
+            background: #ffffff;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            outline: 3px solid rgba(15, 139, 141, 0.16);
+        }
+
+        .error-text {
+            min-height: 18px;
+            color: var(--danger);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .item-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: #fbfefe;
+        }
+
+        .item-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .summary-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: var(--radius);
+            background: var(--accent-soft);
+        }
+
+        .summary-bar span {
+            color: var(--muted);
+            font-weight: 800;
+        }
+
+        .summary-bar strong {
+            font-size: 1.25rem;
+        }
+
+        .actions {
+            display: grid;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            min-height: 46px;
+            border: 0;
+            border-radius: var(--radius);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 14px;
+            color: var(--ink);
+            background: #ffffff;
+            font-weight: 900;
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .btn.primary {
+            color: #ffffff;
+            background: var(--accent);
+            box-shadow: 0 14px 26px rgba(15, 139, 141, 0.24);
+        }
+
+        .btn.danger {
+            color: var(--danger);
+            background: #fff7f5;
+        }
+
+        .status-message {
+            min-height: 22px;
+            color: var(--warning);
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        .preview-card {
+            overflow: hidden;
+        }
+
+        .invoice-preview {
+            padding: 18px;
+            background: #ffffff;
+        }
+
+        .preview-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .preview-top h2 {
+            margin: 0;
+            font-size: 1.45rem;
+        }
+
+        .preview-meta {
+            color: var(--muted);
+            font-size: 0.86rem;
+            text-align: right;
+        }
+
+        .preview-section {
+            display: grid;
+            gap: 6px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .preview-section span,
+        .preview-table th {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .preview-section strong {
+            font-size: 1rem;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .preview-table th,
+        .preview-table td {
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+        }
+
+        .preview-table td:last-child,
+        .preview-table th:last-child {
+            text-align: right;
+        }
+
+        .preview-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0 8px;
+            font-size: 1.2rem;
+            font-weight: 900;
+        }
+
+        .preview-note {
+            margin: 14px 0 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 760px) {
+            .workspace {
+                grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+                align-items: start;
+            }
+
+            .item-row {
+                grid-template-columns: minmax(0, 1.3fr) minmax(160px, 0.7fr) auto;
+                align-items: start;
+            }
+
+            .preview-card {
+                position: sticky;
+                top: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="app-shell">
+        <header class="app-header">
+            <div class="brand">
+                <h1>Invoice Kos</h1>
+                <p>Buat PDF tagihan kos dari HP.</p>
+            </div>
+            <div class="invoice-chip" id="invoiceNumber">INV</div>
+        </header>
+
+        <section class="workspace" aria-label="Generator invoice kos">
+            <form class="panel" id="invoiceForm" novalidate>
+                <div class="panel-header">
+                    <h2>Data Invoice</h2>
+                </div>
+                <div class="panel-body form-grid">
+                    <div class="field">
+                        <label for="kosName">Nama kos</label>
+                        <input id="kosName" name="kosName" autocomplete="organization" placeholder="Kos Melati">
+                        <div class="error-text" data-error-for="kosName"></div>
+                    </div>
+                    <div class="field">
+                        <label for="tenantName">Nama penyewa</label>
+                        <input id="tenantName" name="tenantName" autocomplete="name" placeholder="Nama penyewa">
+                        <div class="error-text" data-error-for="tenantName"></div>
+                    </div>
+                    <div class="field">
+                        <label for="roomNumber">Nomor kamar</label>
+                        <input id="roomNumber" name="roomNumber" inputmode="text" placeholder="A-03">
+                        <div class="error-text" data-error-for="roomNumber"></div>
+                    </div>
+                    <div class="field">
+                        <label for="billingPeriod">Periode tagihan</label>
+                        <input id="billingPeriod" name="billingPeriod" placeholder="Mei 2026">
+                        <div class="error-text" data-error-for="billingPeriod"></div>
+                    </div>
+                    <div class="field">
+                        <label for="dueDate">Jatuh tempo</label>
+                        <input id="dueDate" name="dueDate" type="date">
+                        <div class="error-text" data-error-for="dueDate"></div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-label">Item tagihan</div>
+                        <div class="item-list" id="itemList"></div>
+                        <button class="btn" type="button" id="addItemButton">Tambah Item</button>
+                        <div class="error-text" data-error-for="items"></div>
+                    </div>
+
+                    <div class="summary-bar">
+                        <span>Total</span>
+                        <strong id="totalAmount">Rp0</strong>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn primary" type="button" id="downloadButton">Download PDF</button>
+                        <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
+                    </div>
+                </div>
+            </form>
+
+            <article class="panel preview-card" aria-label="Preview invoice">
+                <div class="panel-header">
+                    <h2>Preview</h2>
+                </div>
+                <div class="invoice-preview" id="invoicePreview">
+                    <div class="preview-top">
+                        <div>
+                            <h2 id="previewKosName">Nama Kos</h2>
+                            <p class="preview-note">Invoice tagihan kos</p>
+                        </div>
+                        <div class="preview-meta">
+                            <div id="previewInvoiceNumber">INV</div>
+                            <div id="previewInvoiceDate">Tanggal invoice</div>
+                        </div>
+                    </div>
+                    <div class="preview-section">
+                        <span>Kepada</span>
+                        <strong id="previewTenantName">Nama penyewa</strong>
+                        <div id="previewRoomPeriod">Kamar - Periode</div>
+                    </div>
+                    <div class="preview-section">
+                        <span>Jatuh Tempo</span>
+                        <strong id="previewDueDate">Pilih tanggal</strong>
+                    </div>
+                    <table class="preview-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="previewItems"></tbody>
+                    </table>
+                    <div class="preview-total">
+                        <span>Total</span>
+                        <strong id="previewTotal">Rp0</strong>
+                    </div>
+                    <p class="preview-note">Harap melakukan pembayaran sebelum jatuh tempo.</p>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        // App behavior is added in later tasks.
+    </script>
+</body>
+
+</html>
