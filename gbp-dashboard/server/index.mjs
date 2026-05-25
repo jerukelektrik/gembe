@@ -1,6 +1,7 @@
+import './env.mjs';
 import express from 'express';
 import { createBrandMappingStore } from './brandMappingStore.mjs';
-import { exchangeCodeForToken, getAuthUrl } from './googleAuth.mjs';
+import { exchangeCodeForToken, getAuthUrl, getGoogleOAuthConfigStatus } from './googleAuth.mjs';
 import { getSyncState, readDashboardPayload, runManualSync } from './syncService.mjs';
 
 const app = express();
@@ -14,6 +15,10 @@ app.get('/api/dashboard', async (_request, response) => {
 
 app.get('/api/sync/status', (_request, response) => {
   response.json(getSyncState());
+});
+
+app.get('/api/auth/status', (_request, response) => {
+  response.json(getGoogleOAuthConfigStatus());
 });
 
 app.post('/api/sync', async (_request, response) => {
@@ -40,7 +45,11 @@ app.post('/api/brand-mappings', async (request, response) => {
 });
 
 app.get('/auth/google', (_request, response) => {
-  response.redirect(getAuthUrl());
+  try {
+    response.redirect(getAuthUrl());
+  } catch (error) {
+    response.status(400).send(`<p>${error instanceof Error ? error.message : 'Google OAuth is not configured.'}</p><p>Fill <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in <code>gbp-dashboard/.env</code>, then restart the local server.</p>`);
+  }
 });
 
 app.get('/auth/google/callback', async (request, response) => {
