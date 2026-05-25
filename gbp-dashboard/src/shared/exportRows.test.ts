@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { BranchProfile } from './types';
-import { buildExportRows, toCsv } from './exportRows';
+import { buildExportRows, toCsv, toXlsxBlob } from './exportRows';
 
 const branch: BranchProfile = {
   id: '1',
@@ -53,5 +53,11 @@ describe('buildExportRows', () => {
 
   it('creates csv with headers', () => {
     expect(toCsv([{ brand: 'Brain Academy', branch: 'Brain Academy Bandung' }])).toBe('brand,branch\nBrain Academy,Brain Academy Bandung');
+  });
+
+  it('creates an xlsx blob', () => {
+    const blob = toXlsxBlob([{ brand: 'Brain Academy', branch: 'Brain Academy Bandung' }]);
+    expect(blob.type).toBe('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    expect(blob.size).toBeGreaterThan(500);
   });
 });

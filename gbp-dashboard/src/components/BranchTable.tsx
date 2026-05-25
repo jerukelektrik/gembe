@@ -1,8 +1,7 @@
 import { ArrowDownUp, Download } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import * as XLSX from 'xlsx';
 import { BRANDS, getBrandLabel } from '../shared/brands';
-import { buildExportRows, toCsv } from '../shared/exportRows';
+import { buildExportRows, toCsv, toXlsxBlob } from '../shared/exportRows';
 import { filterBranches, sortBranches, type BranchFilters, type BranchSort, type SortColumn } from '../shared/filters';
 import type { BlockingReason, BranchProfile, BrandId } from '../shared/types';
 
@@ -39,10 +38,12 @@ export function BranchTable({ branches }: { branches: BranchProfile[] }) {
   }
 
   function downloadXlsx() {
-    const sheet = XLSX.utils.json_to_sheet(exportRows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, sheet, 'branches');
-    XLSX.writeFile(workbook, 'gbp-branches-filtered.xlsx');
+    const blob = toXlsxBlob(exportRows);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'gbp-branches-filtered.xlsx';
+    link.click();
+    URL.revokeObjectURL(link.href);
   }
 
   function SortButton({ column, label }: { column: SortColumn; label: string }) {
