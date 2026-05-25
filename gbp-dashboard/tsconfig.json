@@ -4,10 +4,12 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "strict": true,
+    "module": "ESNext",
+    "target": "ES2022",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals"]
   },
   "include": ["src"]
 }
