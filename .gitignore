@@ -1,1 +1,6 @@
 .vercel
+.superpowers/
+gbp-dashboard/node_modules/
+gbp-dashboard/dist/
+gbp-dashboard/data/
+gbp-dashboard/.env
