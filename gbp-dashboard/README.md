@@ -14,6 +14,19 @@ If the Connect Google button is disabled, the local server did not find the requ
 
 Without Google OAuth, Sync Data uses deterministic mock data so the dashboard can be reviewed safely.
 
+## Google API Access And Quota
+
+If Sync Data fails with `Google API quota/access error (429)`, the OAuth connection is working but the Google Cloud project may not have Business Profile API access yet.
+
+Check:
+
+1. Google Cloud Console > APIs & Services > Enabled APIs & Services.
+2. Open **My Business Account Management API**.
+3. Open **Quotas**.
+4. If quota is `0 QPM`, request **Business Profile API Application for Basic API Access** for that project.
+
+Google's GBP API docs state that 0 QPM means the project has not been granted access yet.
+
 ## KPI Definitions
 
 - Register Rate = verified profiles / total Google Business Profile profiles.
