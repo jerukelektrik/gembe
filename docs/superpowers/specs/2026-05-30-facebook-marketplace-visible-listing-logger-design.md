@@ -10,6 +10,8 @@ This extension is a personal logging tool, not a crawler. It does not auto-scrol
 
 The extension can also add a user-triggered `Cek umur` control to visible Marketplace listing cards. The user clicks the control on one listing card, and only then the extension checks that listing detail page for visible text such as `sudah ditawarkan sejak 6 minggu yang lalu`. The result is cached locally and rendered back on the card as an inline age badge.
 
+The inline card UI should only appear on Marketplace search-result pages with a query, such as `/marketplace/yogyakartacity/search/?query=karimun`. It should not appear on unrelated Facebook pages.
+
 ## Goals
 
 - Capture visible Facebook Marketplace listing links from a search-results page after the user clicks a popup button.
@@ -21,6 +23,7 @@ The extension can also add a user-triggered `Cek umur` control to visible Market
 - Add a per-listing `Cek umur` control on visible Marketplace cards.
 - Fetch and parse the listing age only after the user clicks `Cek umur` for that specific card.
 - Display the detail-page listing age inline on the Marketplace card when it can be found.
+- Display hover metadata with fixed labels and `-` for unavailable Facebook data.
 - Cache listing age results locally by listing ID/URL.
 
 ## Non-Goals
@@ -52,18 +55,24 @@ The extension can also add a user-triggered `Cek umur` control to visible Market
 
 Optional per-card age workflow:
 
-1. User opens a Marketplace search-results page.
+1. User opens a Marketplace search-results page with a query, for example `/marketplace/yogyakartacity/search/?query=karimun`.
 2. Extension injects a small inline panel into visible listing cards.
-3. Each panel starts with `Cek umur` and `Status: belum dicek`.
+3. Each panel starts with `Cek umur` and hover metadata placeholders.
 4. User clicks `Cek umur` on one card.
 5. Extension checks only that listing detail page for visible age text.
-6. Extension displays the result on the same card, for example:
-   - `Ditawarkan: 6 minggu lalu`
-   - `Perkiraan tanggal: 2026-04-18`
-   - `Sumber: halaman detail`
+6. Extension displays the result on the same card and in the hover metadata, for example:
+   - `Ditawarkan pada: 6 minggu lalu`
+   - `Dipublish pada: -`
+   - `Pertama kali dideteksi oleh alat pada: 2026-05-30 14:12`
 7. If no age text can be found, extension displays:
    - `Umur tidak ditemukan`
    - `Buka detail`
+
+The hover metadata uses these labels:
+
+- `Ditawarkan pada`: visible offer-age text from the detail page, or `-`.
+- `Dipublish pada`: precise publish date only if Facebook visibly provides it, otherwise `-`.
+- `Pertama kali dideteksi oleh alat pada`: local extension timestamp from `firstSeenAt`, or `-` before the listing is stored.
 
 ## Architecture
 
@@ -90,6 +99,7 @@ The popup owns the user interaction:
 The content script runs only when triggered from the popup. It:
 
 - Checks whether the current page looks like a Marketplace page.
+- Checks whether the current page is a Marketplace search page with a query before injecting card UI.
 - Finds visible listing anchors in the rendered page.
 - Extracts listing ID from `/marketplace/item/<id>/` when available.
 - Falls back to canonical URL when no listing ID is found.
@@ -114,10 +124,11 @@ When the detail page only provides relative age text, the extension stores:
 
 - `displayedOfferAgeText`: the raw visible phrase or normalized relative text, such as `6 minggu lalu`
 - `estimatedOfferDate`: approximate ISO date calculated from the current local date
+- `publishedAt`: precise publish date only if Facebook visibly provides it; otherwise empty
 - `offerAgeCheckedAt`: ISO timestamp when the user-triggered check ran
 - `offerAgeSource`: `detail-page-visible-text`
 
-The UI must label the date as `Perkiraan tanggal`, not as a guaranteed original publish date.
+The UI must not display an estimated date as `Dipublish pada`. If Facebook does not visibly provide a precise publish date, `Dipublish pada` must render as `-`.
 
 ### Local Storage
 
@@ -138,6 +149,7 @@ The extension stores:
       "displayedPublishedText": "baru saja dicantumkan",
       "displayedOfferAgeText": "6 minggu lalu",
       "estimatedOfferDate": "2026-04-18",
+      "publishedAt": "",
       "offerAgeCheckedAt": "2026-05-30T08:12:00.000Z",
       "offerAgeSource": "detail-page-visible-text"
     }
@@ -153,12 +165,15 @@ The listing key is `listingId` when available. If no ID can be extracted, the ke
 - `displayedPublishedText` is raw visible text from Facebook, such as `baru saja dicantumkan`, `3 hari lalu`, or `Listed 2 days ago`.
 - `displayedOfferAgeText` is raw or normalized visible age text from the listing detail page.
 - `estimatedOfferDate` is an approximate date derived from relative age text. It is not an exact publish timestamp.
+- `publishedAt` is only set when Facebook visibly provides a precise publish date.
 - The UI must label these as:
   - `Pertama terlihat oleh alat`
   - `Label waktu dari Facebook`
-  - `Ditawarkan`
-  - `Perkiraan tanggal`
+  - `Ditawarkan pada`
+  - `Dipublish pada`
+  - `Pertama kali dideteksi oleh alat pada`
 - The extension must not call this field `firstPublishedAt` unless Facebook visibly provides a precise published timestamp in the page.
+- Unavailable fields must display as `-`.
 
 ## Capture Rules
 
@@ -168,6 +183,7 @@ The listing key is `listingId` when available. If no ID can be extracted, the ke
 - Capture does not refresh the page.
 - Capture does not follow listing links automatically.
 - Capture does not call private or undocumented Facebook endpoints.
+- Card hover UI is injected only on Marketplace search-result URLs with a query parameter.
 - Age checks only run after the user clicks `Cek umur` on a specific listing card.
 - Age checks must not run automatically for all visible listings.
 - Age checks must use cached local results when available.
@@ -199,6 +215,8 @@ Manual tests:
 - Test parsing of Indonesian relative phrases such as `6 minggu yang lalu`.
 - Test parsing of English relative phrases such as `listed 2 days ago`.
 - Test cached age results render without a new detail-page request.
+- Test card UI does not inject on Marketplace URLs without a search query.
+- Test hover metadata renders `-` for unavailable `publishedAt`.
 
 Automated tests where practical:
 
@@ -216,6 +234,8 @@ Automated tests where practical:
 - The extension stores `displayedPublishedText` only when visible text is available.
 - The extension does not run automatic background collection.
 - Visible Marketplace listing cards show a `Cek umur` control.
+- The `Cek umur` control appears on Marketplace search-result pages with query URLs such as `/marketplace/yogyakartacity/search/?query=karimun`.
 - Clicking `Cek umur` on one card displays listing age from the detail page when visible text can be found.
-- Relative age text displays with an approximate date label.
+- Hover metadata displays `Ditawarkan pada`, `Dipublish pada`, and `Pertama kali dideteksi oleh alat pada`.
+- Missing Facebook-provided fields display as `-`.
 - Age checks are per-card user actions, not automatic batch checks.
