@@ -9,7 +9,7 @@ Google Business Profile Branch Analytics Dashboard adalah dashboard local/intern
 MVP berfokus pada:
 
 - Performance cabang: website clicks, phone call clicks, rating, dan total reviews.
-- Status profil: verified, need verification, rejected, permanently closed, temporarily closed, dan unknown.
+- Status profil: verified, need verification, on progress, duplicate, rejected, permanently closed, temporarily closed, dan unknown.
 - Completion status cabang berdasarkan verifikasi, reputasi, dan checklist foto manual.
 - Brand detection dari nama profil Google Business Profile.
 - Manual correction untuk brand yang tidak jelas dan checklist foto cabang.
@@ -81,7 +81,7 @@ MVP membutuhkan akses ke API berikut untuk live sync:
 
 - Account Management API untuk membaca account yang bisa diakses.
 - Business Information API untuk membaca daftar locations/profiles dan field identitas seperti title, store code, address, metadata, dan open status.
-- Verifications API, khususnya Voice of Merchant state, untuk membantu mapping verified, need verification, rejected, atau unknown.
+- Verifications API, khususnya Voice of Merchant state, untuk membantu mapping verified, need verification, on progress, rejected, atau unknown.
 - Reviews API untuk membaca average rating dan total review count ketika tersedia.
 - Business Profile Performance API untuk `WEBSITE_CLICKS` dan `CALL_CLICKS`.
 
@@ -136,7 +136,7 @@ Internal viewer dapat membuka dashboard dari mesin/internal network yang sama bi
 
 ### 7.1 Total Profiles
 
-Jumlah semua Google Business Profile locations yang berhasil dibaca dari akun owner/manager dan masuk scope brand dashboard, termasuk verified, need verification, rejected, permanently closed, temporarily closed, dan unknown.
+Jumlah semua Google Business Profile locations yang berhasil dibaca dari akun owner/manager dan masuk scope brand dashboard, termasuk verified, need verification, on progress, duplicate, rejected, permanently closed, temporarily closed, dan unknown.
 
 ### 7.2 Verified Rate
 
@@ -144,7 +144,7 @@ Jumlah semua Google Business Profile locations yang berhasil dibaca dari akun ow
 Verified Rate = verified profiles / total profiles
 ```
 
-Denominator memakai semua profile dalam scope dashboard. Closed dan rejected tetap dihitung dalam denominator agar masalah operational tetap terlihat.
+Denominator memakai semua profile dalam scope dashboard. On progress, duplicate, closed, dan rejected tetap dihitung dalam denominator agar masalah operational tetap terlihat.
 
 ### 7.3 Completion Rate
 
@@ -185,12 +185,14 @@ MVP menampilkan status berikut:
 
 - `verified`: cabang memiliki Voice of Merchant atau sinyal valid lain yang menunjukkan profile sudah bisa dikelola/ditampilkan normal.
 - `need_verification`: Google API memberi sinyal bahwa cabang perlu verifikasi atau belum memiliki Voice of Merchant.
+- `on_progress`: Google API atau data operasional memberi sinyal bahwa verifikasi, update, atau review profil sedang diproses. Di UI status ini dapat diberi label "On progress" atau "Memproses".
+- `duplicate`: Google API memberi sinyal bahwa profile terdeteksi sebagai duplikat, misalnya dari metadata duplicate location atau reason setara.
 - `rejected`: Google API memberi sinyal guideline/compliance/verification problem yang perlu diperbaiki. Karena istilah dan payload Google dapat berbeda antar endpoint, implementasi harus menyimpan raw status reason untuk audit.
 - `permanently_closed`: Google Business Profile open status menunjukkan permanently closed.
 - `temporarily_closed`: Google Business Profile open status menunjukkan temporarily closed.
 - `unknown`: status belum bisa dipetakan dengan aman.
 
-Status closed dari open status lebih spesifik daripada verified. Jika sebuah profile verified tetapi permanently closed, UI menampilkannya sebagai `permanently_closed`.
+Status duplicate dan closed dari metadata/open status lebih spesifik daripada verified. Jika sebuah profile verified tetapi terdeteksi duplicate atau permanently closed, UI menampilkannya sebagai `duplicate` atau `permanently_closed`.
 
 ## 9. Brand Detection
 
@@ -407,7 +409,7 @@ Konten:
 - Website clicks.
 - Phone call clicks.
 - Breakdown per brand.
-- Issue summary: need verification, rejected, temporarily closed, permanently closed, low rating, low reviews, missing photo checklist.
+- Issue summary: need verification, on progress, duplicate, rejected, temporarily closed, permanently closed, low rating, low reviews, missing photo checklist.
 - Ringkas daftar cabang yang paling perlu perhatian.
 
 ### 13.2 Branches
@@ -449,7 +451,7 @@ Halaman operasional untuk masalah status.
 
 Konten:
 
-- Count per status: verified, need verification, rejected, permanently closed, temporarily closed, unknown.
+- Count per status: verified, need verification, on progress, duplicate, rejected, permanently closed, temporarily closed, unknown.
 - Tabel issue untuk status non-verified/closed/rejected.
 - Raw status reason jika tersedia.
 - Filter brand dan search.
@@ -538,6 +540,8 @@ Untuk membantu follow-up, setiap not complete profile memiliki blocking reason.
 Possible reasons:
 
 - `need_verification`.
+- `on_progress`.
+- `duplicate`.
 - `rejected`.
 - `closed`.
 - `rating_below_4_5`.
@@ -568,7 +572,7 @@ Automated tests atau focused manual tests harus mencakup:
 
 - Completion formula: verified + rating `>= 4.5` + reviews `>= 10` + tiga checklist foto.
 - Verified rate formula.
-- Status mapping untuk verified, need verification, rejected, permanently closed, temporarily closed, dan unknown.
+- Status mapping untuk verified, need verification, on progress, duplicate, rejected, permanently closed, temporarily closed, dan unknown.
 - Brand detection untuk delapan brand.
 - Ambiguous/no brand masuk Needs Review.
 - Manual brand mapping tidak tertimpa sync.
@@ -644,6 +648,8 @@ Warna:
 - Success: green untuk `verified` dan `complete`.
 - Warning: amber untuk `need_verification`, missing checklist, dan partial sync.
 - Danger: red/rose untuk `rejected` dan sync failure.
+- Warning-muted atau blue/amber untuk `on_progress` agar berbeda dari final failure.
+- Danger-muted atau neutral-danger untuk `duplicate` karena perlu follow-up tetapi bukan rejection.
 - Muted gray untuk `unknown`, closed, disabled state, dan secondary metadata.
 
 Warna tidak boleh menjadi satu-satunya pembeda status. Setiap status chip harus memakai kombinasi label, icon, dan warna.
@@ -720,8 +726,10 @@ Komponen utama:
   - Rejected count.
   - Missing checklist count.
 - Issue summary:
-  - Need verification.
-  - Rejected.
+- Need verification.
+- On progress.
+- Duplicate.
+- Rejected.
   - Permanently closed.
   - Temporarily closed.
   - Rating below 4.5.
@@ -793,6 +801,8 @@ Struktur:
 - Summary count per status.
 - Grouped issue table untuk:
   - Need verification.
+  - On progress.
+  - Duplicate.
   - Rejected.
   - Permanently closed.
   - Temporarily closed.
@@ -804,6 +814,8 @@ Status chip:
 
 - `verified`: success.
 - `need_verification`: warning.
+- `on_progress`: warning-muted atau info.
+- `duplicate`: danger-muted atau neutral-danger.
 - `rejected`: danger.
 - `permanently_closed`: muted/danger-muted.
 - `temporarily_closed`: muted/warning-muted.
