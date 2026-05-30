@@ -8,6 +8,8 @@ Build a Firefox browser extension that helps a car seller track which Facebook M
 
 This extension is a personal logging tool, not a crawler. It does not auto-scroll, auto-refresh, run background captures, call Facebook endpoints, or access hidden/internal data.
 
+The extension can also add a user-triggered `Cek umur` control to visible Marketplace listing cards. The user clicks the control on one listing card, and only then the extension checks that listing detail page for visible text such as `sudah ditawarkan sejak 6 minggu yang lalu`. The result is cached locally and rendered back on the card as an inline age badge.
+
 ## Goals
 
 - Capture visible Facebook Marketplace listing links from a search-results page after the user clicks a popup button.
@@ -16,6 +18,10 @@ This extension is a personal logging tool, not a crawler. It does not auto-scrol
 - Save the first time the extension saw each listing.
 - Save the visible Facebook time label when it appears in the page, without treating it as a guaranteed original publish date.
 - Show a simple capture summary and links to newly seen listings.
+- Add a per-listing `Cek umur` control on visible Marketplace cards.
+- Fetch and parse the listing age only after the user clicks `Cek umur` for that specific card.
+- Display the detail-page listing age inline on the Marketplace card when it can be found.
+- Cache listing age results locally by listing ID/URL.
 
 ## Non-Goals
 
@@ -25,6 +31,8 @@ This extension is a personal logging tool, not a crawler. It does not auto-scrol
 - Do not collect seller profile data, chat content, or hidden/internal Facebook data.
 - Do not sync data to a server or cloud account.
 - Do not detect reposts when the URL/listing ID changes.
+- Do not batch-check every visible listing automatically.
+- Do not infer an exact original publish timestamp when Facebook only provides relative text.
 
 ## User Workflow
 
@@ -41,6 +49,21 @@ This extension is a personal logging tool, not a crawler. It does not auto-scrol
    - already seen listings
    - listings with visible Facebook time labels
 9. User opens links from the new-listing list.
+
+Optional per-card age workflow:
+
+1. User opens a Marketplace search-results page.
+2. Extension injects a small inline panel into visible listing cards.
+3. Each panel starts with `Cek umur` and `Status: belum dicek`.
+4. User clicks `Cek umur` on one card.
+5. Extension checks only that listing detail page for visible age text.
+6. Extension displays the result on the same card, for example:
+   - `Ditawarkan: 6 minggu lalu`
+   - `Perkiraan tanggal: 2026-04-18`
+   - `Sumber: halaman detail`
+7. If no age text can be found, extension displays:
+   - `Umur tidak ditemukan`
+   - `Buka detail`
 
 ## Architecture
 
@@ -72,6 +95,29 @@ The content script runs only when triggered from the popup. It:
 - Falls back to canonical URL when no listing ID is found.
 - Attempts to read a visible time label near the listing card and stores the raw text when present.
 - Returns structured capture results to the popup.
+- Injects a small per-card age panel into visible Marketplace listing cards.
+- Handles `Cek umur` clicks for one listing card at a time.
+- Reads cached age results from extension storage before requesting detail-page text.
+
+### Detail Age Check
+
+The detail age check is user-triggered from a single listing card. The extension may request the listing detail URL after the user clicks `Cek umur`, then parse only visible HTML/text for listing-age phrases. It must not call private or undocumented Facebook endpoints.
+
+Supported visible phrases include Indonesian and English relative age text:
+
+- `sudah ditawarkan sejak 6 minggu yang lalu`
+- `ditawarkan sejak 3 hari yang lalu`
+- `listed 2 days ago`
+- `listed 1 month ago`
+
+When the detail page only provides relative age text, the extension stores:
+
+- `displayedOfferAgeText`: the raw visible phrase or normalized relative text, such as `6 minggu lalu`
+- `estimatedOfferDate`: approximate ISO date calculated from the current local date
+- `offerAgeCheckedAt`: ISO timestamp when the user-triggered check ran
+- `offerAgeSource`: `detail-page-visible-text`
+
+The UI must label the date as `Perkiraan tanggal`, not as a guaranteed original publish date.
 
 ### Local Storage
 
@@ -89,7 +135,11 @@ The extension stores:
       "lastSeenAt": "2026-05-30T08:10:00.000Z",
       "seenCount": 2,
       "sourceUrl": "https://www.facebook.com/marketplace/category/vehicles...",
-      "displayedPublishedText": "baru saja dicantumkan"
+      "displayedPublishedText": "baru saja dicantumkan",
+      "displayedOfferAgeText": "6 minggu lalu",
+      "estimatedOfferDate": "2026-04-18",
+      "offerAgeCheckedAt": "2026-05-30T08:12:00.000Z",
+      "offerAgeSource": "detail-page-visible-text"
     }
   }
 }
@@ -101,9 +151,13 @@ The listing key is `listingId` when available. If no ID can be extracted, the ke
 
 - `firstSeenAt` is the reliable timestamp created by the extension.
 - `displayedPublishedText` is raw visible text from Facebook, such as `baru saja dicantumkan`, `3 hari lalu`, or `Listed 2 days ago`.
+- `displayedOfferAgeText` is raw or normalized visible age text from the listing detail page.
+- `estimatedOfferDate` is an approximate date derived from relative age text. It is not an exact publish timestamp.
 - The UI must label these as:
   - `Pertama terlihat oleh alat`
   - `Label waktu dari Facebook`
+  - `Ditawarkan`
+  - `Perkiraan tanggal`
 - The extension must not call this field `firstPublishedAt` unless Facebook visibly provides a precise published timestamp in the page.
 
 ## Capture Rules
@@ -114,6 +168,10 @@ The listing key is `listingId` when available. If no ID can be extracted, the ke
 - Capture does not refresh the page.
 - Capture does not follow listing links automatically.
 - Capture does not call private or undocumented Facebook endpoints.
+- Age checks only run after the user clicks `Cek umur` on a specific listing card.
+- Age checks must not run automatically for all visible listings.
+- Age checks must use cached local results when available.
+- Age checks must not repeatedly request the same detail page unless the user explicitly checks again or cache is cleared.
 
 ## Error Handling
 
@@ -122,6 +180,8 @@ The listing key is `listingId` when available. If no ID can be extracted, the ke
 - If Facebook changes its page structure, the extension should return an empty result instead of crashing.
 - If storage fails or is full, show a clear storage error and suggest clearing history.
 - If a listing cannot be normalized, skip it and count it as ignored.
+- If a detail-page age check fails, show `Umur tidak ditemukan` and a `Buka detail` link for manual inspection.
+- If a cached age result exists, show it immediately without requesting the detail page again.
 
 ## Testing
 
@@ -134,6 +194,11 @@ Manual tests:
 - Use the popup on a non-Facebook page and verify the error state.
 - Clear history and verify the next capture treats listings as new again.
 - Test Indonesian and English Facebook UI labels by storing visible text as-is.
+- Test that each visible listing card gets one `Cek umur` panel.
+- Test that clicking `Cek umur` checks only the clicked listing.
+- Test parsing of Indonesian relative phrases such as `6 minggu yang lalu`.
+- Test parsing of English relative phrases such as `listed 2 days ago`.
+- Test cached age results render without a new detail-page request.
 
 Automated tests where practical:
 
@@ -150,3 +215,7 @@ Automated tests where practical:
 - New listing links from the latest capture can be opened by the user.
 - The extension stores `displayedPublishedText` only when visible text is available.
 - The extension does not run automatic background collection.
+- Visible Marketplace listing cards show a `Cek umur` control.
+- Clicking `Cek umur` on one card displays listing age from the detail page when visible text can be found.
+- Relative age text displays with an approximate date label.
+- Age checks are per-card user actions, not automatic batch checks.
