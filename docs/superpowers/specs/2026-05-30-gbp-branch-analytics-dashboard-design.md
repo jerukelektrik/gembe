@@ -606,7 +606,419 @@ MVP dianggap berhasil jika:
 - Reviews endpoint dapat terbatas untuk verified locations. UI dan sync harus memperlakukan unavailable data sebagai `N/A`.
 - Media API tersedia untuk list media, tetapi MVP tidak mengandalkan API untuk menentukan apakah foto berisi interior, gedung, atau aktivitas belajar.
 
-## 20. References
+## 20. UI/UX Design Guide
+
+### 20.1 Design Direction
+
+Dashboard harus terasa seperti operations command center untuk tim yang mengelola ribuan cabang, bukan landing page atau marketing dashboard.
+
+Prinsip desain:
+
+- Desktop-first.
+- Data-dense tetapi tetap rapi.
+- Table-first: tabel cabang adalah pusat kerja utama.
+- KPI dipakai sebagai navigasi masalah, bukan dekorasi.
+- Chart hanya dipakai untuk orientasi cepat.
+- State dan status harus mudah dipahami tanpa bergantung pada warna saja.
+- Interface harus tetap usable saat Google API belum siap, data kosong, atau sync gagal sebagian.
+
+Hindari:
+
+- Hero besar.
+- Gradient dekoratif.
+- Card bertumpuk terlalu banyak.
+- Pie/donut chart untuk banyak status atau brand.
+- Tabel yang tidak bisa discan.
+- Warna status tanpa label/icon.
+- Empty state yang hanya menampilkan layar kosong.
+
+### 20.2 Visual System
+
+Style visual yang direkomendasikan adalah clean enterprise dashboard dengan surface terang, border halus, dan kontras teks tinggi.
+
+Warna:
+
+- Background utama: putih atau abu sangat muda.
+- Surface/table/card: putih.
+- Primary action dan active navigation: teal.
+- Success: green untuk `verified` dan `complete`.
+- Warning: amber untuk `need_verification`, missing checklist, dan partial sync.
+- Danger: red/rose untuk `rejected` dan sync failure.
+- Muted gray untuk `unknown`, closed, disabled state, dan secondary metadata.
+
+Warna tidak boleh menjadi satu-satunya pembeda status. Setiap status chip harus memakai kombinasi label, icon, dan warna.
+
+Typography:
+
+- Gunakan font sans-serif modern seperti Inter, Geist, atau Source Sans.
+- Body text minimum 14-16px.
+- Gunakan tabular numbers untuk KPI, rating, review count, website clicks, phone call clicks, dan table numeric columns.
+- Heading di dashboard harus compact. Hindari display-scale typography yang memakan ruang kerja.
+
+Spacing dan shape:
+
+- Gunakan 4/8px spacing scale.
+- Border radius kecil, sekitar 6-8px untuk cards, buttons, inputs, chips, dan table container.
+- Shadow minimal. Pakai border dan background contrast untuk memisahkan area.
+- Jangan menaruh card di dalam card kecuali modal atau repeated item yang memang perlu framing.
+
+### 20.3 App Shell
+
+Layout desktop:
+
+```text
+Sidebar | Header + metadata
+        | Sticky filter bar
+        | KPI strip
+        | Main content per page
+```
+
+Sidebar:
+
+- Berisi navigation utama: Overview, Branches, Profile Status, Photo Checklist, Needs Review, Settings & Sync.
+- Active page harus jelas dengan icon, label, dan indicator.
+- Navigation tidak boleh tersembunyi di desktop.
+
+Header:
+
+- Menampilkan nama dashboard.
+- Menampilkan source status: mock/empty/cache/live Google API.
+- Menampilkan last sync timestamp.
+- Menyediakan action ringan seperti Refresh.
+
+Sticky filter bar:
+
+- Date range.
+- Brand.
+- Profile status.
+- Completion status.
+- Search branch/profile/store code/city.
+- Export action bila relevan.
+
+Filter bar harus tetap tersedia saat operator bekerja di tabel panjang.
+
+### 20.4 Overview Page
+
+Overview berfungsi sebagai triage cepat.
+
+Komponen utama:
+
+- KPI strip compact:
+  - Total profiles.
+  - Verified rate.
+  - Completion rate.
+  - Average rating.
+  - Total reviews.
+  - Website clicks.
+  - Phone call clicks.
+- Brand health table:
+  - Brand.
+  - Total profiles.
+  - Verified rate.
+  - Completion rate.
+  - Need verification count.
+  - Rejected count.
+  - Missing checklist count.
+- Issue summary:
+  - Need verification.
+  - Rejected.
+  - Permanently closed.
+  - Temporarily closed.
+  - Rating below 4.5.
+  - Reviews below 10.
+  - Missing interior photo.
+  - Missing building photo.
+  - Missing learning activity photo.
+- Attention list:
+  - Cabang dengan blocking reason paling banyak atau issue paling kritikal.
+
+Chart yang cocok:
+
+- Horizontal bar untuk completion rate per brand.
+- Stacked bar untuk status distribution per brand.
+
+Jika data belum ada, Overview menampilkan setup-oriented empty state dengan tombol ke Settings & Sync.
+
+### 20.5 Branches Page
+
+Branches adalah halaman kerja utama dan harus dioptimalkan untuk ribuan rows.
+
+Table behavior:
+
+- Sticky table header.
+- Sticky first column atau profile name column bila memungkinkan.
+- Column sorting untuk status, rating, total reviews, website clicks, phone call clicks, completion status, dan last synced.
+- Virtualized list/table bila row count besar.
+- Search harus debounce agar input tetap responsif.
+- Numeric columns rata kanan.
+- Status dan completion columns harus mudah discan.
+- Export CSV/XLSX mengikuti filter dan sort aktif.
+
+Recommended columns:
+
+- Brand.
+- Profile name.
+- Store code.
+- City/address.
+- Profile status.
+- Rating.
+- Total reviews.
+- Website clicks.
+- Phone call clicks.
+- Photo checklist.
+- Completion status.
+- Blocking reason.
+- Last synced.
+
+Photo checklist display:
+
+- Gunakan checklist mini dalam satu column:
+  - Interior.
+  - Gedung.
+  - Aktivitas.
+- Tiap item memakai icon/label pendek dan tooltip atau expanded detail.
+
+Completion display:
+
+- `Complete` memakai success chip.
+- `Not complete` memakai warning chip dan menampilkan blocking reason.
+- Jika ada lebih dari satu reason, tampilkan reason count dan detail saat row expanded.
+
+### 20.6 Profile Status Page
+
+Profile Status fokus pada masalah setup/verifikasi.
+
+Struktur:
+
+- Summary count per status.
+- Grouped issue table untuk:
+  - Need verification.
+  - Rejected.
+  - Permanently closed.
+  - Temporarily closed.
+  - Unknown.
+- Raw status reason bila tersedia.
+- Filter brand dan search.
+
+Status chip:
+
+- `verified`: success.
+- `need_verification`: warning.
+- `rejected`: danger.
+- `permanently_closed`: muted/danger-muted.
+- `temporarily_closed`: muted/warning-muted.
+- `unknown`: neutral.
+
+Closed status harus dibedakan jelas dari verification status karena closed adalah operational profile state.
+
+### 20.7 Photo Checklist Page
+
+Photo Checklist harus terasa seperti ops worksheet.
+
+Fitur utama:
+
+- Count cabang complete checklist.
+- Count cabang missing masing-masing foto.
+- Tabel checklist per cabang.
+- Checkbox untuk interior, gedung, dan aktivitas belajar.
+- Bulk CSV import.
+- Import preview dan validation result.
+- Rejected import rows dengan reason yang jelas.
+
+CSV import flow:
+
+1. Operator pilih file CSV.
+2. UI menampilkan preview beberapa rows pertama.
+3. UI menampilkan detected columns.
+4. Operator confirm import.
+5. UI menampilkan success rows dan rejected rows.
+
+Checklist update harus memberi feedback cepat, misalnya inline saved state atau toast singkat. Untuk bulk import, tampilkan summary yang bisa dibaca ulang.
+
+### 20.8 Needs Review Page
+
+Needs Review dipakai untuk profile yang brand-nya tidak bisa dipetakan otomatis.
+
+UI requirement:
+
+- Tabel profile yang `brand_mapping_status = needs_review`.
+- Search profile name/store code/city.
+- Brand selector dengan delapan brand canonical.
+- Save manual mapping per row.
+- Bulk assign brand untuk selected rows.
+- Manual mapping harus diberi label `manual` agar operator tahu ini override.
+
+Setelah mapping disimpan, row keluar dari Needs Review dan masuk perhitungan normal.
+
+### 20.9 Settings & Sync Page
+
+Settings & Sync harus mengurangi kebingungan teknis Google API.
+
+Tampilkan API readiness checklist:
+
+- Google Cloud Project tersedia.
+- OAuth consent screen configured.
+- OAuth Web Client tersedia.
+- Redirect URI lokal terdaftar.
+- Scope `https://www.googleapis.com/auth/business.manage`.
+- GBP Basic API Access aktif.
+- GBP quota tidak `0`.
+- Google account adalah owner/manager untuk semua profile.
+
+Sync panel:
+
+- Google connection status.
+- Connect/Reconnect Google button.
+- Manual Sync Data button.
+- Date range untuk performance sync.
+- Last sync timestamp.
+- Sync progress stage:
+  - accounts.
+  - locations.
+  - status.
+  - reviews.
+  - performance.
+  - database save.
+- Sync result:
+  - success.
+  - partial_success.
+  - failed.
+- Error summary dengan recovery step.
+
+Jika quota `0`, error copy harus mengarahkan operator untuk submit Basic API Access, bukan quota increase.
+
+### 20.10 Empty, Loading, And Error States
+
+Empty states:
+
+- No Google connection: arahkan ke Settings & Sync.
+- No data after sync: jelaskan akun mungkin tidak punya accessible profiles atau filter terlalu sempit.
+- No matching filter: tampilkan clear filters action.
+- No Needs Review rows: tampilkan bahwa semua brand sudah mapped.
+
+Loading states:
+
+- Pakai skeleton untuk KPI, table, dan charts.
+- Sync progress tidak boleh hanya spinner. Tampilkan stage dan counts jika tersedia.
+- Button async harus disabled dan menampilkan loading state.
+
+Error states:
+
+- OAuth revoked: minta reconnect.
+- API quota/access: tampilkan penyebab dan action.
+- Partial sync: tampilkan jumlah sukses/gagal dan link ke error details.
+- Metric unavailable: tampilkan `N/A`, bukan `0`.
+
+### 20.11 Accessibility
+
+Accessibility requirement:
+
+- Semua interactive controls bisa dipakai dengan keyboard.
+- Visible focus ring untuk button, input, select, checkbox, table row action, dan nav item.
+- Icon-only button wajib punya `aria-label`.
+- Status tidak boleh disampaikan dengan warna saja.
+- Tabel sortable harus punya indicator visual dan semantic state seperti `aria-sort`.
+- Error dan import result harus diumumkan dengan region yang screen-reader friendly.
+- Contrast text normal minimal 4.5:1.
+- Touch/click target minimal 44x44px untuk controls penting.
+- Jangan disable browser zoom.
+
+### 20.12 Responsive Behavior
+
+MVP adalah desktop-first, tetapi tidak boleh rusak di mobile.
+
+Desktop:
+
+- Sidebar persistent.
+- Full table experience.
+- Sticky filter bar.
+
+Tablet:
+
+- Sidebar boleh collapse.
+- KPI strip bisa wrap.
+- Table tetap horizontal dengan controlled scroll di table container.
+
+Mobile:
+
+- Navigation menjadi top menu atau compact drawer.
+- KPI tampil 2 columns.
+- Branch table boleh menjadi simplified list/card view.
+- Export dan bulk import tetap tersedia, tetapi advanced table ops diarahkan ke desktop.
+
+Mobile tidak perlu menjadi primary ops surface untuk MVP.
+
+### 20.13 Chart And Data Visualization Rules
+
+Gunakan chart hanya jika membantu keputusan.
+
+Recommended:
+
+- Horizontal bar untuk comparison antar brand.
+- Stacked bar untuk distribusi status per brand.
+- Small trend/sparkline hanya jika historical snapshots sudah tersedia.
+
+Avoid:
+
+- Pie/donut untuk lebih dari lima kategori.
+- Chart 3D.
+- Gradient-heavy charts.
+- Warna chart tanpa legend/label.
+- Chart tanpa table alternative.
+
+Setiap chart harus punya:
+
+- Title yang jelas.
+- Unit/metric jelas.
+- Tooltip atau direct labels.
+- Empty state.
+- Table/list alternative untuk data penting.
+
+### 20.14 Component Guidelines
+
+Buttons:
+
+- Satu primary action per screen.
+- Secondary actions memakai outline/ghost style.
+- Destructive actions memakai danger style dan konfirmasi.
+
+Forms:
+
+- Semua fields punya label.
+- Error muncul dekat field terkait.
+- Helper text untuk input teknis seperti OAuth redirect URI atau CSV format.
+
+Chips:
+
+- Dipakai untuk status, completion, source, dan sync state.
+- Harus berisi text, bukan warna saja.
+
+Modals/drawers:
+
+- Gunakan untuk CSV import preview, error details, dan bulk action confirm.
+- Modal harus punya close button, escape behavior, dan unsaved-change confirmation bila ada data belum tersimpan.
+
+Tooltips:
+
+- Dipakai untuk icon/abbreviation yang tidak familiar.
+- Jangan menyembunyikan informasi penting hanya di tooltip.
+
+### 20.15 Acceptance Criteria Tambahan Untuk UI/UX
+
+UI/UX dianggap siap jika:
+
+- Operator dapat mengetahui status data live/mock/cache dari header.
+- Operator dapat menemukan cabang bermasalah dari Overview dalam kurang dari 30 detik.
+- Operator dapat memfilter Branches berdasarkan brand, status, completion, dan search.
+- Operator dapat melihat blocking reason tanpa membuka banyak halaman.
+- Operator dapat melakukan manual checklist update tanpa kehilangan posisi di tabel.
+- Operator dapat melihat hasil import CSV, termasuk rejected rows.
+- Operator dapat memahami error quota `0` dan OAuth revoked dari copy yang tampil.
+- Tabel tetap responsif dengan ribuan rows.
+- Tidak ada horizontal page scroll di viewport utama.
+- Semua controls penting bisa diakses dengan keyboard.
+
+## 21. References
 
 - Google Business Profile OAuth docs: https://developers.google.com/my-business/content/implement-oauth
 - Google Business Profile quota limits: https://developers.google.com/my-business/content/limits
