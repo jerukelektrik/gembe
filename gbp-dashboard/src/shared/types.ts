@@ -7,6 +7,7 @@ export type BrandId =
   | 'workabroad-academy'
   | 'ruangguru-privat'
   | 'altaglobal-school'
+  | 'wonderlab'
   | 'needs-review';
 
 export type BrandConfidence = 'high' | 'low';
@@ -66,4 +67,99 @@ export interface DashboardSummary {
   registerRate: number;
   completionRate: number;
   notCompleteProfiles: number;
+}
+
+export interface LeftChoiceBranchMeta {
+  branchId: string;
+  city: string;
+  province: string;
+  owner: string;
+  profileStrength: number;
+  completionScore: number;
+  suspensionRisk: 'low' | 'medium' | 'high';
+  issues: string[];
+}
+
+export interface LeftChoiceReview {
+  id: string;
+  branchId: string;
+  reviewer: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  sentiment: 'positive' | 'neutral' | 'negative';
+  status: 'pending' | 'drafted' | 'approved' | 'replied';
+  text: string;
+  suggestedReply: string;
+  createdAt: string;
+}
+
+export interface LeftChoiceContentIssue {
+  id: string;
+  branchId: string;
+  type: 'photo' | 'service' | 'category' | 'description' | 'brand-asset';
+  severity: 'critical' | 'warning' | 'info';
+  title: string;
+  recommendation: string;
+  owner: string;
+}
+
+export interface LeftChoicePost {
+  id: string;
+  branchId: string;
+  brandId: BrandId;
+  campaign: string;
+  type: 'offer' | 'event' | 'update' | 'trial-class' | 'open-house';
+  status: 'draft' | 'scheduled' | 'published' | 'failed';
+  scheduledFor: string;
+  utmLabel: string;
+}
+
+export interface LeftChoiceRanking {
+  id: string;
+  branchId: string;
+  brandId: BrandId;
+  city: string;
+  keyword: string;
+  currentRank: number;
+  previousRank: number;
+  topCompetitor: string;
+}
+
+export interface LeftChoiceGeoCell {
+  id: string;
+  branchId: string;
+  keyword: string;
+  x: number;
+  y: number;
+  rank: number;
+}
+
+export interface LeftChoiceCompetitor {
+  id: string;
+  branchId: string;
+  name: string;
+  category: string;
+  city: string;
+  rating: number;
+  reviews: number;
+  keywordRank: number;
+  completeness: number;
+  gap: string;
+}
+
+export interface LeftChoiceAlert {
+  id: string;
+  branchId: string;
+  severity: 'critical' | 'warning' | 'info';
+  type: 'negative-review' | 'suspended-listing' | 'ranking-drop' | 'sync-warning' | 'profile-drop';
+  title: string;
+  detail: string;
+  createdAt: string;
+}
+
+export interface LeftChoiceReportSummary {
+  brandId: BrandId;
+  profileStrength: number;
+  reviewResponseRate: number;
+  rankingDrops: number;
+  openAlerts: number;
 }

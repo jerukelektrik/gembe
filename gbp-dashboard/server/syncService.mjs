@@ -2,7 +2,7 @@ import { detectBrand } from '../src/shared/brands.ts';
 import { calculateDashboardSummary, calculateDeltaPercent, getBlockingReason } from '../src/shared/metrics.ts';
 import { createCacheStore } from './cacheStore.mjs';
 import { createGbpClient } from './gbpClient.mjs';
-import { readToken } from './googleAuth.mjs';
+import { getValidToken } from './googleAuth.mjs';
 import { mockBranches } from './mockData.mjs';
 
 let syncState = {
@@ -87,11 +87,11 @@ export function normalizeLocation(input) {
 export async function readDashboardPayload() {
   const store = createCacheStore();
   const cached = await store.readLatest();
-  if (cached) return { ...cached, source: cached.source || 'cache' };
+  if (cached?.source === 'google-api') return { ...cached, source: cached.source || 'cache' };
 
   return {
     source: 'mock',
-    syncedAt: '2026-05-25T02:00:00.000Z',
+    syncedAt: '2026-06-27T04:00:00.000Z',
     summary: calculateDashboardSummary(mockBranches),
     branches: mockBranches
   };
@@ -117,7 +117,7 @@ export async function runManualSync() {
   };
 
   try {
-    const token = await readToken();
+    const token = await getValidToken();
     if (!token) {
       syncState = { ...syncState, stage: 'writing-mock-cache' };
       const payload = mockPayload(new Date().toISOString());

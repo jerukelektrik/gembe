@@ -14,6 +14,7 @@ export const BRANDS: BrandDefinition[] = [
   { id: 'englishacademy', label: 'English Academy', patterns: [/english\s*academy/i] },
   { id: 'workabroad-academy', label: 'Work Abroad Academy', patterns: [/work\s*abroad\s*academy/i] },
   { id: 'altaglobal-school', label: 'Alta Global School', patterns: [/alta\s*global\s*school/i, /altaglobal\s*school/i] },
+  { id: 'wonderlab', label: 'Wonderlab', patterns: [/wonder\s*lab/i, /wonderlab/i] },
   { id: 'ruangguru', label: 'Ruangguru', patterns: [/ruangguru/i] }
 ];
 
