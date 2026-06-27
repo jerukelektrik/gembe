@@ -65,6 +65,29 @@ npm run dev:all
 
 Use `npm test` before handing changes to another teammate. Use `npm run build` before a manager demo.
 
+## Deploy to Vercel
+
+Deploy from this folder:
+
+```bash
+cd gbp-dashboard
+npx vercel
+```
+
+For production:
+
+```bash
+npx vercel --prod
+```
+
+The deployed prototype uses the serverless API files in `api/` for demo data:
+
+- `api/dashboard.js`
+- `api/auth/status.js`
+- `api/sync.js`
+
+Google OAuth is intentionally disabled in the Vercel demo until production credentials and live GBP API access are configured.
+
 ## Google API Access And Quota
 
 If Sync Data fails with `Google API quota/access error (429)`, the OAuth connection is working but the Google Cloud project may not have Business Profile API access yet.
