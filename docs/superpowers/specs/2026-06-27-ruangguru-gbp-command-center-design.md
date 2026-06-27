@@ -1,10 +1,10 @@
-# Ruangguru GBP Command Center Design
+# LeftChoice Design
 
 Date: 2026-06-27
 
 ## Summary
 
-Upgrade the existing `gbp-dashboard` prototype into a RightChoice-like Google Business Profile command center for Ruangguru's multi-brand branch portfolio. The prototype uses dummy data by default and is meant for two jobs:
+Upgrade the existing `gbp-dashboard` prototype into **LeftChoice**, a RightChoice-like Google Business Profile management platform for Ruangguru's multi-brand branch portfolio. The prototype uses dummy data by default and is meant for two jobs:
 
 - Help managers understand the target platform vision.
 - Help the SEO/local ops team simulate daily workflows before real Google API integration is expanded.
@@ -31,7 +31,7 @@ Needs a clear executive view of total branches, profile health, risk, review qua
 
 ### SEO / Local Ops
 
-Needs a daily command center for finding branches that need attention, reviewing negative feedback, planning posts, checking ranking drops, and exporting lists for follow-up.
+Needs a daily operating dashboard for finding branches that need attention, reviewing negative feedback, planning posts, checking ranking drops, and exporting lists for follow-up.
 
 ### Future Regional / Brand Operator
 
@@ -39,7 +39,7 @@ Needs filtered views by brand, city, region, or branch group, with enough contex
 
 ## Product Shape
 
-The app becomes `Ruangguru GBP Command Center`.
+The app becomes `LeftChoice`.
 
 It keeps the existing local app structure:
 
@@ -282,7 +282,7 @@ Add practical usage and maintenance guidance:
 
 ## Acceptance Criteria
 
-- The app visually and functionally resembles a local GBP management command center.
+- The app visually and functionally resembles a local GBP management platform named LeftChoice.
 - A user can run the app locally and explore the prototype with dummy data.
 - The dashboard includes the major RightChoice-inspired modules requested for benchmarking.
 - The README or maintenance guide explains how to operate and update the prototype.
